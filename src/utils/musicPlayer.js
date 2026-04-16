@@ -3,9 +3,28 @@ const { DefaultExtractors, SoundCloudExtractor } = require('@discord-player/extr
 const { EmbedBuilder } = require('discord.js');
 
 let player = null;
+let youtubeJsConsoleSilenced = false;
+
+/** يخفض ضوضاء youtubei.js عند تحليل نصوص الواجهة (ليس خطأ تشغيل). */
+function silenceYoutubeJsTextParserConsole() {
+    if (youtubeJsConsoleSilenced) return;
+    youtubeJsConsoleSilenced = true;
+    const tag = '[YOUTUBEJS][Text]';
+    const sub = 'Unable to find matching run for command run';
+    for (const method of ['log', 'warn', 'info']) {
+        const orig = console[method].bind(console);
+        console[method] = (...args) => {
+            const head = args[0];
+            if (typeof head === 'string' && head.includes(tag) && head.includes(sub)) return;
+            orig(...args);
+        };
+    }
+}
 
 async function initPlayer(client) {
     if (player) return player;
+
+    silenceYoutubeJsTextParserConsole();
 
     player = new Player(client, {
         connectionTimeout: 30_000,
@@ -14,13 +33,20 @@ async function initPlayer(client) {
     // Skip SoundCloud extractor to avoid intermittent stream extraction failures.
     await player.extractors.loadMulti(DefaultExtractors.filter((extractor) => extractor !== SoundCloudExtractor));
     try {
-        // Optional community extractor for robust YouTube support.
+        try {
+            const { Log } = require('youtubei.js');
+            if (typeof Log?.setLevel === 'function' && Log.Level?.NONE !== undefined) {
+                Log.setLevel(Log.Level.NONE);
+            }
+        } catch {
+            /* الحزمة قد تكون داخل discord-player-youtubei فقط */
+        }
+
         const { YoutubeiExtractor } = require('discord-player-youtubei');
         await player.extractors.register(YoutubeiExtractor, {
             streamOptions: { useClient: 'WEB' },
             useYoutubeDL: true,
             dlUpdateInterval: 86400000,
-            // تقليل ضوضاء السجلات من youtubei.js (مثل [YOUTUBEJS][Text]: Unable to find matching run...)
             logLevel: 'NONE',
         });
     } catch (error) {
