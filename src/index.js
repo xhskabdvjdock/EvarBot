@@ -1,4 +1,6 @@
 require('dotenv').config();
+require('./utils/silenceYoutubeJsLogs').install();
+
 const { Client, GatewayIntentBits, Collection, ActivityType } = require('discord.js');
 const config = require('../config.json');
 
