@@ -61,9 +61,23 @@ function startDashboard(client) {
         res.sendFile(path.join(__dirname, 'public', 'server.html'));
     });
 
+    const callbackUrl = process.env.CALLBACK_URL || '';
+    if (process.env.RENDER === 'true' && /localhost|127\.0\.0\.1/i.test(callbackUrl)) {
+        console.warn(
+            '[Dashboard] CALLBACK_URL يشير إلى localhost بينما التشغيل على Render. عيّن CALLBACK_URL إلى: ' +
+                'https://YOUR-SERVICE.onrender.com/auth/callback (ونفس الرابط في Discord → OAuth2 → Redirects).'
+        );
+    }
+    if (callbackUrl) {
+        console.log(`[Dashboard] OAuth redirect (يجب أن يطابق Discord Portal): ${callbackUrl}`);
+    }
+
     // تشغيل السيرفر (0.0.0.0 مطلوب على بعض الاستضافات)
     app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🌐 الداشبورد شغال على المنفذ ${PORT}`);
+        console.log(`🌐 الداشبورد يستمع على المنفذ ${PORT}`);
+        console.log(
+            '[Dashboard] تسجيل الدخول يتم من المتصفح: بعد الموافقة في Discord يفتح المتصفح عنوان CALLBACK_URL. البوت لا يحتاج أن "يتصل" بـ localhost؛ جهازك أو عنوان الاستضافة هو من يفتح الرابط.'
+        );
     });
 
     return app;
