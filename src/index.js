@@ -1,5 +1,7 @@
 require('dotenv').config();
 require('./utils/silenceYoutubeJsLogs').install();
+const dns = require('node:dns');
+dns.setDefaultResultOrder('ipv4first');
 
 const { Client, GatewayIntentBits, Collection, ActivityType } = require('discord.js');
 const config = require('../config.json');
