@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EvarBot - لوحة التحكم</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -18,7 +19,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="/dashboard" class="navbar-brand">
-            <div class="icon">🤖</div>
+            <div class="icon"><i class="fa-solid fa-robot"></i></div>
             <span>EvarBot</span>
         </a>
         <div class="navbar-user">
@@ -32,36 +33,36 @@
     <div class="main">
         <!-- Header -->
         <div class="page-header">
-            <h1>👋 مرحباً، <span id="greeting-name"></span></h1>
+            <h1><i class="fa-solid fa-hand-sparkles" style="color: #fbbf24;"></i> مرحباً، <span id="greeting-name"></span></h1>
             <p>هنا تقدر تتحكم بالبوت وتدير سيرفراتك بكل سهولة</p>
         </div>
 
         <!-- Stats -->
         <div class="stats-grid" id="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">🌐</div>
+                <div class="stat-icon"><i class="fa-solid fa-globe" style="color: #5865f2;"></i></div>
                 <div class="stat-value" id="stat-servers">-</div>
                 <div class="stat-label">السيرفرات</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">👥</div>
+                <div class="stat-icon"><i class="fa-solid fa-users" style="color: #43b581;"></i></div>
                 <div class="stat-value" id="stat-users">-</div>
                 <div class="stat-label">المستخدمين</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">📡</div>
+                <div class="stat-icon"><i class="fa-solid fa-satellite-dish" style="color: #faa61a;"></i></div>
                 <div class="stat-value" id="stat-ping">-</div>
                 <div class="stat-label">البنق</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">⏱️</div>
+                <div class="stat-icon"><i class="fa-solid fa-stopwatch" style="color: #eb459e;"></i></div>
                 <div class="stat-value" id="stat-uptime">-</div>
                 <div class="stat-label">وقت التشغيل</div>
             </div>
         </div>
 
         <!-- Servers -->
-        <h2 class="section-title">🏠 سيرفراتك</h2>
+        <h2 class="section-title"><i class="fa-solid fa-house"></i> سيرفراتك</h2>
         <div id="guilds-container" class="guilds-grid">
             <div class="loading">
                 <div class="spinner"></div>
