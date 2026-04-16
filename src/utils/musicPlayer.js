@@ -20,6 +20,8 @@ async function initPlayer(client) {
             streamOptions: { useClient: 'WEB' },
             useYoutubeDL: true,
             dlUpdateInterval: 86400000,
+            // تقليل ضوضاء السجلات من youtubei.js (مثل [YOUTUBEJS][Text]: Unable to find matching run...)
+            logLevel: 'NONE',
         });
     } catch (error) {
         console.warn('⚠️ youtubei extractor not loaded:', error.message);
