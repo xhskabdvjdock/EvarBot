@@ -3,28 +3,9 @@ const { DefaultExtractors, SoundCloudExtractor } = require('@discord-player/extr
 const { EmbedBuilder } = require('discord.js');
 
 let player = null;
-let youtubeJsConsoleSilenced = false;
-
-/** يخفض ضوضاء youtubei.js عند تحليل نصوص الواجهة (ليس خطأ تشغيل). */
-function silenceYoutubeJsTextParserConsole() {
-    if (youtubeJsConsoleSilenced) return;
-    youtubeJsConsoleSilenced = true;
-    const tag = '[YOUTUBEJS][Text]';
-    const sub = 'Unable to find matching run for command run';
-    for (const method of ['log', 'warn', 'info']) {
-        const orig = console[method].bind(console);
-        console[method] = (...args) => {
-            const head = args[0];
-            if (typeof head === 'string' && head.includes(tag) && head.includes(sub)) return;
-            orig(...args);
-        };
-    }
-}
 
 async function initPlayer(client) {
     if (player) return player;
-
-    silenceYoutubeJsTextParserConsole();
 
     player = new Player(client, {
         connectionTimeout: 30_000,
