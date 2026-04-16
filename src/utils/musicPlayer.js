@@ -11,8 +11,8 @@ async function initPlayer(client) {
         connectionTimeout: 30_000,
     });
 
-    // Skip SoundCloud to avoid failures, and YouTubeExtractor because we use YoutubeiExtractor
-    await player.extractors.loadMulti(DefaultExtractors.filter((ext) => !['SoundCloudExtractor', 'YouTubeExtractor'].includes(ext.constructor.name) && ext.name !== 'YouTubeExtractor'));
+    // Skip SoundCloud extractor to avoid intermittent stream extraction failures.
+    await player.extractors.loadMulti(DefaultExtractors.filter((extractor) => extractor !== SoundCloudExtractor));
     try {
         try {
             const { Log } = require('youtubei.js');
@@ -25,8 +25,9 @@ async function initPlayer(client) {
 
         const { YoutubeiExtractor } = require('discord-player-youtubei');
         await player.extractors.register(YoutubeiExtractor, {
-            streamOptions: { useClient: 'ANDROID' },
-            useYoutubeDL: false,
+            streamOptions: { useClient: 'WEB' },
+            useYoutubeDL: true,
+            dlUpdateInterval: 86400000,
             logLevel: 'NONE',
         });
     } catch (error) {
