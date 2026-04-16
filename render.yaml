@@ -1,0 +1,27 @@
+# نشر على Render: Web Service واحد يشغّل البوت + الداشبورد معاً (انظر src/index.js)
+# من لوحة Render: New → Blueprint → اربط المستودع واختر هذا الملف
+
+services:
+  - type: web
+    name: evarbot
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TOKEN
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: CLIENT_SECRET
+        sync: false
+      - key: CALLBACK_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false

@@ -1,0 +1,100 @@
+{
+  "welcome": {
+    "enabled": true,
+    "channelId": "1466807075324694540",
+    "message": "hi {user} in {server} by {count}",
+    "dmEnabled": true,
+    "dmMessage": "hi {user} in {server} by {count}",
+    "embedColor": "#5f198a",
+    "bannerUrl": "https://media.discordapp.net/attachments/1313121477918330981/1493496217542594641/quote_1454715276724801671.png?ex=69df2e3e&is=69dddcbe&hm=e2f29d3d5c2895342859fe7ab46bb62c3c49de69a5075f6c2d92459fbfd2893c&=&format=webp&quality=lossless",
+    "authorText": "اهلا",
+    "showFields": false,
+    "footerText": "رسالة ترحيب",
+    "showTimestamp": true,
+    "titleText": null,
+    "thumbnail": "server"
+  },
+  "goodbye": {
+    "enabled": false,
+    "channelId": null,
+    "message": "للأسف **{username}** غادر السيرفر 😢\nنتمنى يرجع قريب!",
+    "embedColor": "#2b2d31",
+    "showFields": true,
+    "showTimestamp": true,
+    "titleText": null,
+    "authorText": null,
+    "footerText": null,
+    "thumbnail": "user",
+    "bannerUrl": null
+  },
+  "warnings": {
+    "1062828607883448340": []
+  },
+  "tickets": {
+    "enabled": true,
+    "categoryId": "1464949169654595676",
+    "staffRoleId": "1479285227460366396",
+    "transcriptChannelId": "1466807075324694540",
+    "maxTickets": 1,
+    "panelTitle": "الدعم الفني",
+    "panelDescription": "اضغط عشان يفتح لك تكت",
+    "panelColor": "#540e5d",
+    "panelButtonText": "هنا",
+    "welcomeMessage": "يا هلا يا {username}@",
+    "panelMode": "dropdown",
+    "panelImage": "https://media.discordapp.net/attachments/1350199898246615152/1470703997987061770/Gemini_Generated_Image_b7nk8eb7nk8eb7nk.png?ex=69df51d5&is=69de0055&hm=116ac991fa738f1742a43cb48e6d5409ab449606c08cff1ccf5762168fe70d46&=&format=webp&quality=lossless",
+    "panelThumbnail": null,
+    "categories": [
+      {
+        "id": "1222",
+        "label": "1",
+        "emoji": "😝",
+        "style": "Secondary",
+        "description": "",
+        "color": "#5865f2",
+        "welcomeMessage": "أهلاً {user}! 👋\nتذكرة **1** مفتوحة. اشرح طلبك بالتفصيل."
+      }
+    ]
+  },
+  "leveling": {
+    "enabled": false,
+    "channelId": null,
+    "notifyMode": "channel",
+    "xpMin": 15,
+    "xpMax": 25,
+    "cooldown": 60,
+    "levelUpMessage": ""
+  },
+  "activeTickets": [],
+  "ticketCounter": 3,
+  "ai": {
+    "enabled": true,
+    "channelId": "1479285228899143761",
+    "persona": {
+      "name": "Nexar Ai",
+      "personality": "ودود ومساعد ومحترف",
+      "language": "العربية",
+      "rules": "الرد بدون استخدام ايموجيات - الرد بشكل جدي - الرد فقط باللغة العربية وبدون اي رموز غريبة - نحن في 2026 - انت مطور من قبل علي او wlc8 - المرجع الاول والنهائي لأي سؤال ديني هو المذهب السني"
+    }
+  },
+  "logging": {
+    "enabled": false,
+    "channelId": "1466807075324694540",
+    "events": {
+      "messageDelete": true,
+      "messageEdit": true,
+      "memberJoin": true,
+      "memberLeave": true,
+      "memberRoleUpdate": true,
+      "memberBan": true,
+      "channelCreate": true,
+      "channelDelete": true
+    }
+  },
+  "autorole": {
+    "enabled": true,
+    "roles": [
+      "1479285223094227065"
+    ]
+  }
+}

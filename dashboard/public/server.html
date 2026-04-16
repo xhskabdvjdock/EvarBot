@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvarBot - إدارة السيرفر</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="bg-animated">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/dashboard" class="navbar-brand">
+            <div class="icon">🤖</div>
+            <span>EvarBot</span>
+        </a>
+        <div class="navbar-user">
+            <img id="user-avatar" src="" alt="avatar">
+            <span id="user-name"></span>
+            <a href="/auth/logout" class="btn btn-logout">خروج</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main">
+        <a href="/dashboard" class="back-btn">← الرجوع للسيرفرات</a>
+
+        <!-- Server Header -->
+        <div class="server-header" id="server-header">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="tabs">
+            <button class="tab active" data-tab="welcome" onclick="switchTab('welcome')">🎉 الترحيب</button>
+            <button class="tab" data-tab="goodbye" onclick="switchTab('goodbye')">😢 الوداع</button>
+            <button class="tab" data-tab="leveling" onclick="switchTab('leveling')">⭐ المستويات</button>
+            <button class="tab" data-tab="tickets" onclick="switchTab('tickets')">🎫 التذاكر</button>
+            <button class="tab" data-tab="ai" onclick="switchTab('ai')">🤖 الذكاء الاصطناعي</button>
+            <button class="tab" data-tab="logging" onclick="switchTab('logging')">📋 التسجيلات</button>
+            <button class="tab" data-tab="autorole" onclick="switchTab('autorole')">🎭 الأدوار</button>
+            <button class="tab" data-tab="embedbuilder" onclick="switchTab('embedbuilder')">📨 إمبد</button>
+            <button class="tab" data-tab="music" onclick="switchTab('music'); loadMusicStatus();">🎵 الموسيقى</button>
+            <button class="tab" data-tab="moderation" onclick="switchTab('moderation')">🛡️ الإدارة</button>
+        </div>
+
+        <!-- Welcome Settings -->
+        <div class="settings-panel active" id="panel-welcome">
+            <div class="setting-group">
+                <h3>🎉 إعدادات الترحيب</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل نظام الترحيب</div>
+                        <div class="setting-desc">إرسال رسالة ترحيب عند دخول عضو جديد</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="welcome-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">قناة الترحيب</div>
+                        <div class="setting-desc">القناة اللي تنرسل فيها رسالة الترحيب</div>
+                    </div>
+                    <select class="select-custom" id="welcome-channel" onchange="markChanged()">
+                        <option value="">اختر قناة...</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">لون الإمبد</div>
+                        <div class="setting-desc">لون إطار رسالة الترحيب</div>
+                    </div>
+                    <div class="input-color-wrapper">
+                        <input type="color" class="input-color" id="welcome-color" value="#2b2d31"
+                            onchange="markChanged()">
+                        <span id="welcome-color-hex"
+                            style="color: var(--text-secondary); font-size: 13px;">#2b2d31</span>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">إظهار حقول المعلومات</div>
+                        <div class="setting-desc">عرض اسم العضو، رقمه، وعمر حسابه</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="welcome-fields" checked onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">إظهار الطابع الزمني</div>
+                        <div class="setting-desc">عرض الوقت والتاريخ في الإمبد</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="welcome-timestamp" checked onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">رسالة ترحيب خاصة (DM)</div>
+                        <div class="setting-desc">إرسال رسالة خاصة للعضو الجديد</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="welcome-dm" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>📝 الرسائل</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">رسالة الترحيب</div>
+                    <textarea class="input-text" id="welcome-message" placeholder="أهلاً وسهلاً {user} في {server}!"
+                        oninput="markChanged()"></textarea>
+                    <div class="setting-desc">المتغيرات: {user} {username} {displayname} {server} {count} {tag} {id}
+                    </div>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">رسالة الخاص (DM)</div>
+                    <textarea class="input-text" id="welcome-dm-message" placeholder="أهلاً فيك في {server}!"
+                        oninput="markChanged()"></textarea>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>🎨 تخصيص الإمبد</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">عنوان الإمبد (Title)</div>
+                    <input type="text" class="input-text" id="welcome-title" placeholder="اتركه فاضي للعنوان الافتراضي"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">نص الكاتب (Author)</div>
+                    <input type="text" class="input-text" id="welcome-author" placeholder="مثال: عضو جديد انضم! 🎉"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">نص الفوتر (Footer)</div>
+                    <input type="text" class="input-text" id="welcome-footer" placeholder="اتركه فاضي للفوتر الافتراضي"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">الصورة المصغرة (Thumbnail)</div>
+                        <div class="setting-desc">الصورة الدائرية في الإمبد</div>
+                    </div>
+                    <select class="select-custom" id="welcome-thumbnail" onchange="markChanged()">
+                        <option value="user">👤 صورة العضو</option>
+                        <option value="server">🌐 أيقونة السيرفر</option>
+                        <option value="none">❌ بدون صورة</option>
+                    </select>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">رابط البانر (صورة كبيرة)</div>
+                    <input type="text" class="input-text" id="welcome-banner"
+                        placeholder="https://example.com/banner.png" oninput="markChanged()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Goodbye Settings -->
+        <div class="settings-panel" id="panel-goodbye">
+            <div class="setting-group">
+                <h3>😢 إعدادات الوداع</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل نظام الوداع</div>
+                        <div class="setting-desc">إرسال رسالة عند خروج عضو</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="goodbye-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">قناة الوداع</div>
+                        <div class="setting-desc">القناة اللي تنرسل فيها رسالة الوداع</div>
+                    </div>
+                    <select class="select-custom" id="goodbye-channel" onchange="markChanged()">
+                        <option value="">اختر قناة...</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">لون الإمبد</div>
+                    </div>
+                    <div class="input-color-wrapper">
+                        <input type="color" class="input-color" id="goodbye-color" value="#2b2d31"
+                            onchange="markChanged()">
+                        <span id="goodbye-color-hex"
+                            style="color: var(--text-secondary); font-size: 13px;">#2b2d31</span>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">إظهار حقول المعلومات</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="goodbye-fields" checked onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">إظهار الطابع الزمني</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="goodbye-timestamp" checked onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>📝 الرسائل</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">رسالة الوداع</div>
+                    <textarea class="input-text" id="goodbye-message" placeholder="للأسف {username} غادر السيرفر 😢"
+                        oninput="markChanged()"></textarea>
+                    <div class="setting-desc">المتغيرات: {user} {username} {displayname} {server} {count} {tag} {id}
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>🎨 تخصيص الإمبد</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">عنوان الإمبد (Title)</div>
+                    <input type="text" class="input-text" id="goodbye-title" placeholder="اتركه فاضي للعنوان الافتراضي"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">نص الكاتب (Author)</div>
+                    <input type="text" class="input-text" id="goodbye-author" placeholder="مثال: عضو غادر السيرفر 😢"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">نص الفوتر (Footer)</div>
+                    <input type="text" class="input-text" id="goodbye-footer" placeholder="اتركه فاضي للفوتر الافتراضي"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">الصورة المصغرة (Thumbnail)</div>
+                    </div>
+                    <select class="select-custom" id="goodbye-thumbnail" onchange="markChanged()">
+                        <option value="user">👤 صورة العضو</option>
+                        <option value="server">🌐 أيقونة السيرفر</option>
+                        <option value="none">❌ بدون صورة</option>
+                    </select>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">رابط البانر</div>
+                    <input type="text" class="input-text" id="goodbye-banner"
+                        placeholder="https://example.com/banner.png" oninput="markChanged()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Moderation Panel -->
+        <div class="settings-panel" id="panel-moderation">
+            <div class="setting-group">
+                <h3>🛡️ التحذيرات</h3>
+                <div id="warnings-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leveling Panel -->
+        <div class="settings-panel" id="panel-leveling">
+            <div class="setting-group">
+                <h3>⭐ إعدادات المستويات</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل نظام المستويات</div>
+                        <div class="setting-desc">تتبع XP الأعضاء وإشعارات اللفل أب</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="leveling-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">قناة إشعارات اللفل أب</div>
+                        <div class="setting-desc">القناة اللي ترسل فيها إشعارات ارتفاع المستوى</div>
+                    </div>
+                    <select class="select-custom" id="leveling-channel" onchange="markChanged()">
+                        <option value="">نفس القناة</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">طريقة الإشعار</div>
+                        <div class="setting-desc">كيف ينرسل إشعار اللفل أب</div>
+                    </div>
+                    <select class="select-custom" id="leveling-notify" onchange="markChanged()">
+                        <option value="channel">📢 قناة محددة</option>
+                        <option value="same">💬 نفس القناة</option>
+                        <option value="dm">📩 رسالة خاصة</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>📊 إعدادات XP</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">الحد الأدنى للـ XP</div>
+                        <div class="setting-desc">أقل XP يحصل عليه العضو لكل رسالة</div>
+                    </div>
+                    <input type="number" class="input-text" id="leveling-xpmin" value="15" min="1" max="100"
+                        style="width: 80px; text-align: center;" onchange="markChanged()">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">الحد الأقصى للـ XP</div>
+                        <div class="setting-desc">أكثر XP يحصل عليه العضو لكل رسالة</div>
+                    </div>
+                    <input type="number" class="input-text" id="leveling-xpmax" value="25" min="1" max="200"
+                        style="width: 80px; text-align: center;" onchange="markChanged()">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">الكولداون (بالثواني)</div>
+                        <div class="setting-desc">المدة بين كل حصول على XP</div>
+                    </div>
+                    <input type="number" class="input-text" id="leveling-cooldown" value="60" min="0" max="300"
+                        style="width: 80px; text-align: center;" onchange="markChanged()">
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>📝 رسالة اللفل أب</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">رسالة اللفل أب</div>
+                    <textarea class="input-text" id="leveling-message"
+                        placeholder="🎉 مبروك {user}! وصلت المستوى {level}!" oninput="markChanged()"></textarea>
+                    <div class="setting-desc">المتغيرات: {user} {username} {level} {server}</div>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>🏆 ليدربورد</h3>
+                <div id="leaderboard-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tickets Panel -->
+        <div class="settings-panel" id="panel-tickets">
+            <div class="setting-group">
+                <h3>🎫 إعدادات التذاكر</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل نظام التذاكر</div>
+                        <div class="setting-desc">ينشط بعد إعداد /ticket setup</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="tickets-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">أقصى عدد تذاكر للعضو</div>
+                    </div>
+                    <input type="number" class="input-text" id="tickets-max" value="1" min="1" max="5"
+                        style="width: 80px; text-align: center;" onchange="markChanged()">
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">وضع البانل</div>
+                        <div class="setting-desc">أزرار عادية أو قائمة منسدلة</div>
+                    </div>
+                    <select class="select-custom" id="tickets-mode" onchange="markChanged()">
+                        <option value="buttons">🔘 أزرار</option>
+                        <option value="dropdown">📋 قائمة منسدلة</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>🎨 تخصيص البانل</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">عنوان البانل</div>
+                    <input type="text" class="input-text" id="tickets-panel-title" placeholder="🎫 نظام التذاكر"
+                        oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">وصف البانل</div>
+                    <textarea class="input-text" id="tickets-panel-desc" placeholder="اختر نوع التذكرة المناسب"
+                        oninput="markChanged()"></textarea>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">لون البانل</div>
+                    </div>
+                    <div class="input-color-wrapper">
+                        <input type="color" class="input-color" id="tickets-panel-color" value="#5865f2"
+                            onchange="markChanged()">
+                    </div>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">صورة البانل (كبيرة)</div>
+                    <input type="text" class="input-text" id="tickets-panel-image"
+                        placeholder="https://example.com/banner.png" oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">صورة مصغرة (Thumbnail)</div>
+                    <input type="text" class="input-text" id="tickets-panel-thumbnail"
+                        placeholder="https://example.com/icon.png" oninput="markChanged()">
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>📋 أنواع التذاكر</h3>
+                <div class="setting-desc" style="margin-bottom: 12px;">أضف أنواع تذاكر مختلفة. كل نوع يظهر كزر أو خيار
+                    في القائمة المنسدلة.</div>
+                <div id="ticket-categories-container"></div>
+                <button type="button" class="btn" onclick="addTicketCategory()"
+                    style="margin-top: 10px; width: 100%; padding: 12px; background: rgba(88,101,242,0.15); border: 2px dashed rgba(88,101,242,0.4); color: var(--accent); font-size: 15px; cursor: pointer; border-radius: var(--radius); transition: all 0.2s;"
+                    onmouseover="this.style.background='rgba(88,101,242,0.25)'"
+                    onmouseout="this.style.background='rgba(88,101,242,0.15)'">
+                    ➕ إضافة نوع تذكرة جديد
+                </button>
+            </div>
+
+            <div class="setting-group">
+                <h3>📤 التذاكر المفتوحة</h3>
+                <div id="active-tickets-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Panel -->
+        <div class="settings-panel" id="panel-ai">
+            <div class="setting-group">
+                <h3>🤖 إعدادات الذكاء الاصطناعي</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل الذكاء الاصطناعي</div>
+                        <div class="setting-desc">يتيح للأعضاء استخدام /ai chat والرد التلقائي</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="ai-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">📺 قناة الرد التلقائي</div>
+                    <div class="setting-desc">البوت بيرد تلقائياً على أي رسالة في هالقناة. اتركها فارغة للتعطيل.</div>
+                    <select class="select-custom" id="ai-channel" onchange="markChanged()">
+                        <option value="">— بدون قناة (معطّل) —</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>🎭 شخصية الذكاء الاصطناعي</h3>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">🤖 اسم الـ AI</div>
+                    <input type="text" class="input-text" id="ai-name" placeholder="EvarBot AI" oninput="markChanged()">
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">🎭 وصف الشخصية</div>
+                    <textarea class="input-text" id="ai-personality" placeholder="ودود ومساعد ومحترف"
+                        oninput="markChanged()"></textarea>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">🌐 لغة الرد</div>
+                    </div>
+                    <select class="select-custom" id="ai-language" onchange="markChanged()">
+                        <option value="العربية">🇸🇦 العربية</option>
+                        <option value="English">🇺🇸 English</option>
+                        <option value="العربية والإنجليزية">🌍 العربية والإنجليزية</option>
+                    </select>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">📜 قواعد إضافية</div>
+                    <textarea class="input-text" id="ai-rules"
+                        placeholder="مثل: لا تستخدم ألفاظ بذيئة، ركّز على البرمجة..."
+                        oninput="markChanged()"></textarea>
+                    <div class="setting-desc">قواعد تنطبق على كل ردود الـ AI</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logging Panel -->
+        <div class="settings-panel" id="panel-logging">
+            <div class="setting-group">
+                <h3>📋 إعدادات التسجيلات</h3>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل التسجيلات</div>
+                        <div class="setting-desc">تسجيل الأحداث في قناة محددة</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="logging-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">📺 قناة اللوق</div>
+                    <select class="select-custom" id="logging-channel" onchange="markChanged()">
+                        <option value="">اختر قناة...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <h3>📋 الأحداث</h3>
+                <div class="setting-desc" style="margin-bottom: 12px;">اختر الأحداث اللي تبي تسجلها</div>
+
+                <div class="setting-row">
+                    <div class="setting-label">🗑️ حذف رسالة</div>
+                    <label class="toggle"><input type="checkbox" id="log-messageDelete" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">✏️ تعديل رسالة</div>
+                    <label class="toggle"><input type="checkbox" id="log-messageEdit" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">📥 دخول عضو</div>
+                    <label class="toggle"><input type="checkbox" id="log-memberJoin" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">📤 خروج عضو</div>
+                    <label class="toggle"><input type="checkbox" id="log-memberLeave" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">🎭 تغيير أدوار</div>
+                    <label class="toggle"><input type="checkbox" id="log-memberRoleUpdate"
+                            onchange="markChanged()"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">🔨 بان/أنبان</div>
+                    <label class="toggle"><input type="checkbox" id="log-memberBan" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">📁 إنشاء قناة</div>
+                    <label class="toggle"><input type="checkbox" id="log-channelCreate" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">🗑️ حذف قناة</div>
+                    <label class="toggle"><input type="checkbox" id="log-channelDelete" onchange="markChanged()"><span
+                            class="toggle-slider"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto Roles Panel -->
+        <div class="settings-panel" id="panel-autorole">
+            <div class="setting-group">
+                <h3>🎭 أدوار تلقائية عند الدخول</h3>
+                <div class="setting-desc" style="margin-bottom: 12px;">الأدوار اللي بتنعطى لكل عضو جديد تلقائياً</div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">تفعيل الأدوار التلقائية</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="autorole-enabled" onchange="markChanged()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div class="setting-label">➕ إضافة رول</div>
+                    <div style="display: flex; gap: 8px;">
+                        <select class="select-custom" id="autorole-select" style="flex: 1;">
+                            <option value="">اختر رول...</option>
+                        </select>
+                        <button type="button" class="btn" onclick="addAutoRole()"
+                            style="padding: 8px 18px; white-space: nowrap;">➕ أضف</button>
+                    </div>
+                </div>
+
+                <div id="autorole-list" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- Embed Builder Panel -->
+        <div class="settings-panel" id="panel-embedbuilder">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- النموذج -->
+                <div>
+                    <div class="setting-group">
+                        <h3>📨 بناء الإمبد</h3>
+
+                        <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div class="setting-label">📝 العنوان</div>
+                            <input type="text" class="input-text" id="eb-title" placeholder="عنوان الإمبد"
+                                oninput="updateEmbedPreview()">
+                        </div>
+                        <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div class="setting-label">📝 الوصف</div>
+                            <textarea class="input-text" id="eb-desc" rows="4"
+                                placeholder="وصف الإمبد... (يدعم \n لسطر جديد)"
+                                oninput="updateEmbedPreview()"></textarea>
+                        </div>
+                        <div class="setting-row" style="gap: 10px;">
+                            <div style="flex: 1;">
+                                <div class="setting-label">🎨 اللون</div>
+                                <input type="color" id="eb-color" value="#5865f2" onchange="updateEmbedPreview()"
+                                    style="width: 100%; height: 38px; border: none; border-radius: 8px; cursor: pointer;">
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="setting-label">🔗 رابط العنوان</div>
+                                <input type="text" class="input-text" id="eb-url" placeholder="https://..."
+                                    oninput="updateEmbedPreview()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>📎 الصور</h3>
+                        <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div class="setting-label">🖼️ صورة مصغرة (Thumbnail)</div>
+                            <input type="text" class="input-text" id="eb-thumb" placeholder="رابط الصورة"
+                                oninput="updateEmbedPreview()">
+                        </div>
+                        <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div class="setting-label">🖼️ صورة كبيرة (Image)</div>
+                            <input type="text" class="input-text" id="eb-image" placeholder="رابط الصورة"
+                                oninput="updateEmbedPreview()">
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>ℹ️ الكاتب والفوتر</h3>
+                        <div class="setting-row" style="gap: 10px;">
+                            <div style="flex: 1;">
+                                <div class="setting-label">اسم الكاتب</div>
+                                <input type="text" class="input-text" id="eb-author" placeholder="الاسم"
+                                    oninput="updateEmbedPreview()">
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="setting-label">أيقونة الكاتب</div>
+                                <input type="text" class="input-text" id="eb-author-icon" placeholder="URL"
+                                    oninput="updateEmbedPreview()">
+                            </div>
+                        </div>
+                        <div class="setting-row" style="gap: 10px;">
+                            <div style="flex: 1;">
+                                <div class="setting-label">نص الفوتر</div>
+                                <input type="text" class="input-text" id="eb-footer" placeholder="فوتر"
+                                    oninput="updateEmbedPreview()">
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="setting-label">أيقونة الفوتر</div>
+                                <input type="text" class="input-text" id="eb-footer-icon" placeholder="URL"
+                                    oninput="updateEmbedPreview()">
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-label">إضافة التاريخ</div>
+                            <label class="toggle"><input type="checkbox" id="eb-timestamp"
+                                    onchange="updateEmbedPreview()"><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>📝 الحقول (Fields)</h3>
+                        <div id="eb-fields-list"></div>
+                        <button type="button" class="btn" onclick="addEmbedField()"
+                            style="margin-top: 8px; padding: 8px 16px;">➕ إضافة حقل</button>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>📤 إرسال</h3>
+                        <div class="setting-row" style="gap: 10px;">
+                            <select class="select-custom" id="eb-channel" style="flex: 1;">
+                                <option value="">اختر قناة...</option>
+                            </select>
+                            <button type="button" class="btn" onclick="sendEmbed()"
+                                style="padding: 10px 24px; background: var(--accent); white-space: nowrap;">📨
+                                إرسال</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المعاينة -->
+                <div>
+                    <div class="setting-group" style="position: sticky; top: 20px;">
+                        <h3>👁️ معاينة مباشرة</h3>
+                        <div id="embed-preview"
+                            style="background: #2f3136; border-radius: 8px; padding: 16px; border-left: 4px solid #5865f2;">
+                            <div id="ep-author"
+                                style="display: none; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px;">
+                                <img id="ep-author-icon"
+                                    style="width: 24px; height: 24px; border-radius: 50%; display: none;"><span
+                                    id="ep-author-name" style="font-weight: 600; color: #fff;"></span>
+                            </div>
+                            <div id="ep-title"
+                                style="font-weight: 700; color: #fff; font-size: 16px; margin-bottom: 8px; display: none;">
+                            </div>
+                            <div id="ep-desc"
+                                style="color: #dcddde; font-size: 14px; margin-bottom: 8px; display: none; white-space: pre-wrap;">
+                            </div>
+                            <div id="ep-fields"
+                                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px;">
+                            </div>
+                            <img id="ep-thumb"
+                                style="position: absolute; top: 16px; right: 16px; width: 80px; height: 80px; border-radius: 4px; object-fit: cover; display: none;">
+                            <img id="ep-image"
+                                style="width: 100%; border-radius: 4px; margin-bottom: 8px; display: none;">
+                            <div id="ep-footer"
+                                style="display: none; align-items: center; gap: 8px; font-size: 12px; color: #72767d;">
+                                <img id="ep-footer-icon"
+                                    style="width: 20px; height: 20px; border-radius: 50%; display: none;"><span
+                                    id="ep-footer-text"></span><span id="ep-timestamp"></span>
+                            </div>
+                        </div>
+                        <div
+                            style="margin-top: 12px; padding: 10px; background: rgba(88,101,242,0.1); border-radius: 8px; font-size: 12px; color: var(--text-secondary);">
+                            💡 الإمبد يتحدث تلقائياً أثناء الكتابة. اختر قناة واضغط إرسال!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Panel -->
+    <div class="settings-panel" id="panel-music">
+        <div class="setting-group">
+            <h3>🎵 الموسيقى</h3>
+            <div id="music-status">
+                <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                    <div style="font-size: 48px; margin-bottom: 12px;">🎶</div>
+                    <p>اضغط لتحديث حالة الموسيقى</p>
+                    <button class="btn" onclick="loadMusicStatus()" style="margin-top: 12px; padding: 8px 20px;">🔄
+                        تحديث</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <h3>📝 الأوامر</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;">
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/play</strong><br><small style="color: var(--text-secondary);">تشغيل أغنية</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/skip</strong><br><small style="color: var(--text-secondary);">تخطي</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/stop</strong><br><small style="color: var(--text-secondary);">إيقاف</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/pause</strong><br><small style="color: var(--text-secondary);">إيقاف مؤقت/استكمال</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/queue</strong><br><small style="color: var(--text-secondary);">القائمة</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/nowplaying</strong><br><small style="color: var(--text-secondary);">الأغنية الحالية</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/volume</strong><br><small style="color: var(--text-secondary);">مستوى الصوت</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/loop</strong><br><small style="color: var(--text-secondary);">تكرار</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/shuffle</strong><br><small style="color: var(--text-secondary);">خلط</small>
+                </div>
+                <div
+                    style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
+                    <strong>/seek</strong><br><small style="color: var(--text-secondary);">قفز لوقت</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Bar -->
+    <div class="save-bar" id="save-bar">
+        <p>⚠️ عندك تغييرات غير محفوظة!</p>
+        <button class="btn btn-logout" onclick="resetChanges()">تراجع</button>
+        <button class="btn btn-success" onclick="saveSettings()">💾 حفظ التغييرات</button>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        const guildId = window.location.pathname.split('/').pop();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUser();
+            loadServerInfo(guildId);
+            loadServerSettings(guildId);
+            loadWarnings(guildId);
+            loadLeaderboard(guildId);
+            loadActiveTickets(guildId);
+
+            // تحديث لون الـ HEX عند تغيير اللون
+            document.getElementById('welcome-color').addEventListener('input', (e) => {
+                document.getElementById('welcome-color-hex').textContent = e.target.value;
+            });
+            document.getElementById('goodbye-color').addEventListener('input', (e) => {
+                document.getElementById('goodbye-color-hex').textContent = e.target.value;
+            });
+        });
+    </script>
+</body>
+
+</html>

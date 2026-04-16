@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvarBot - لوحة التحكم</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="bg-animated">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/dashboard" class="navbar-brand">
+            <div class="icon">🤖</div>
+            <span>EvarBot</span>
+        </a>
+        <div class="navbar-user">
+            <img id="user-avatar" src="" alt="avatar">
+            <span id="user-name"></span>
+            <a href="/auth/logout" class="btn btn-logout">خروج</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>👋 مرحباً، <span id="greeting-name"></span></h1>
+            <p>هنا تقدر تتحكم بالبوت وتدير سيرفراتك بكل سهولة</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🌐</div>
+                <div class="stat-value" id="stat-servers">-</div>
+                <div class="stat-label">السيرفرات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="stat-users">-</div>
+                <div class="stat-label">المستخدمين</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📡</div>
+                <div class="stat-value" id="stat-ping">-</div>
+                <div class="stat-label">البنق</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value" id="stat-uptime">-</div>
+                <div class="stat-label">وقت التشغيل</div>
+            </div>
+        </div>
+
+        <!-- Servers -->
+        <h2 class="section-title">🏠 سيرفراتك</h2>
+        <div id="guilds-container" class="guilds-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUser();
+            loadStats();
+            loadGuilds();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Secrets — لا ترفع التوكنات (احتفظ بـ .env محلياً فقط)
+.env
+.env.local
+.env.*.local
+
+# اختياري — أضف السطر التالي إذا لا تريد رفع إعدادات السيرفرات (مجلد data) إلى Git:
+# data/
+
+# قواعد بيانات محلية (إن استخدمتها لاحقاً)
+*.sqlite
+*.db
+
+# سجلات وأنظمة تشغيل
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# مؤقت
+.cache/
+tmp/
+temp/

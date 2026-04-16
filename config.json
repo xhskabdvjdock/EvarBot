@@ -1,0 +1,13 @@
+{
+    "embedColor": "#2b2d31",
+    "successColor": "#43b581",
+    "errorColor": "#f04747",
+    "warnColor": "#faa61a",
+    "bot": {
+        "status": "online",
+        "activity": {
+            "name": "/help | EvarBot",
+            "type": "WATCHING"
+        }
+    }
+}
