@@ -28,6 +28,7 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "ffmpeg-static": "^5.3.0",
+    "lavacord": "^2.2.0",
     "libsodium-wrappers": "^0.8.3",
     "mediaplex": "^1.0.0",
     "youtube-dl-exec": "^3.1.5",
