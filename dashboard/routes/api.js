@@ -77,6 +77,52 @@ router.post('/lavalink', requireAuth, (req, res) => {
     }
 });
 
+router.post('/lavalink/test', requireAuth, async (req, res) => {
+    try {
+        const { node } = req.body || {};
+        const host = String(node?.host || '').trim();
+        const port = Number(node?.port || 2333);
+        const password = String(node?.password || '');
+        const secure = Boolean(node?.secure);
+
+        if (!host || !password || !Number.isFinite(port)) {
+            return res.status(400).json({ success: false, error: 'الرجاء إدخال host/port/password بشكل صحيح' });
+        }
+
+        if (/example\.com/i.test(host)) {
+            return res.status(400).json({ success: false, error: 'هذا Host تجريبي. أدخل عنوان Lavalink حقيقي.' });
+        }
+
+        const base = `${secure ? 'https' : 'http'}://${host}:${port}`;
+        const response = await fetch(`${base}/version`, {
+            headers: {
+                Authorization: password,
+            },
+        });
+
+        if (!response.ok) {
+            const body = await response.text().catch(() => '');
+            return res.status(400).json({
+                success: false,
+                error: `فشل /version (${response.status}). غالبًا Password أو Secure/Port غير صحيح. ${body ? `الرد: ${body.slice(0, 120)}` : ''}`.trim(),
+            });
+        }
+
+        const version = (await response.text()).trim();
+        if (!/^\d+\.\d+\.\d+/.test(version)) {
+            return res.status(400).json({
+                success: false,
+                error: `الخادم ردّ بـ "${version}" وليس إصدار Lavalink صالح. هذا غالبًا ليس Lavalink أو Proxy غير صحيح.`,
+            });
+        }
+
+        return res.json({ success: true, version });
+    } catch (err) {
+        const msg = String(err?.message || err);
+        return res.status(400).json({ success: false, error: `فشل الاتصال: ${msg}` });
+    }
+});
+
 // ══════════════════════ سيرفرات المستخدم ══════════════════════
 router.get('/guilds', requireAuth, (req, res) => {
     const client = req.client;
