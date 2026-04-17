@@ -50,6 +50,17 @@ module.exports = {
         }
 
         const query = interaction.options.getString('query');
+        const existingQueue = getQueue(interaction.guildId);
+        if (existingQueue?.channelId && existingQueue.channelId !== channel.id) {
+            return interaction.reply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('#ed4245')
+                        .setDescription(`❌ البوت مشغّل حاليًا في روم آخر <#${existingQueue.channelId}>.\nادخل نفس الروم أو استخدم /stop أولًا.`),
+                ],
+                flags: MessageFlags.Ephemeral,
+            });
+        }
         try {
             await interaction.deferReply();
         } catch (error) {
