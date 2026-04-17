@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getGuildData, updateGuildData } = require('../../src/utils/database');
+const { getGlobalData, updateGlobalData } = require('../../src/utils/globalConfig');
 
 // ميدل وير للتحقق من تسجيل الدخول
 function requireAuth(req, res, next) {
@@ -35,6 +36,45 @@ router.get('/stats', requireAuth, (req, res) => {
         uptimeMs: uptime,
         ping: client.ws.ping,
     });
+});
+
+// ══════════════════════ Lavalink (إعداد عالمي) ══════════════════════
+router.get('/lavalink', requireAuth, (req, res) => {
+    const g = getGlobalData();
+    res.json(g.lavalink || { nodes: [] });
+});
+
+router.post('/lavalink', requireAuth, (req, res) => {
+    try {
+        const { nodes } = req.body || {};
+        if (!Array.isArray(nodes) || nodes.length < 1) {
+            return res.status(400).json({ error: 'nodes يجب أن تكون مصفوفة وبها عنصر واحد على الأقل' });
+        }
+
+        const cleaned = nodes.map((n, idx) => ({
+            id: String(n.id || `node${idx + 1}`),
+            host: String(n.host || '').trim(),
+            port: Number(n.port || 2333),
+            password: String(n.password || ''),
+            secure: Boolean(n.secure),
+        })).filter(n => n.host && n.password && Number.isFinite(n.port));
+
+        if (cleaned.length < 1) {
+            return res.status(400).json({ error: 'يجب تعبئة host/port/password بشكل صحيح' });
+        }
+
+        const updated = updateGlobalData('lavalink', { nodes: cleaned });
+
+        // حاول إعادة تهيئة الموسيقى إن كانت موجودة
+        try {
+            const { reinitLavalink } = require('../../src/utils/lavalinkPlayer');
+            reinitLavalink(req.client).catch(() => { });
+        } catch { }
+
+        res.json({ success: true, lavalink: updated.lavalink });
+    } catch (err) {
+        res.status(500).json({ error: 'فشل التحديث: ' + err.message });
+    }
 });
 
 // ══════════════════════ سيرفرات المستخدم ══════════════════════
