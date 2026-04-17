@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, ChannelType, MessageFlags } = require('discord.js');
-const { QueryType } = require('discord-player');
-const { getPlayer, getQueue } = require('../../utils/musicPlayer');
+const { getQueue, llPlay } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -50,16 +49,7 @@ module.exports = {
             });
         }
 
-        const queue = getQueue(interaction.guildId);
-        if (queue?.channel && queue.channel.id !== channel.id) {
-            return interaction.reply({
-                embeds: [new EmbedBuilder().setColor('#ed4245').setDescription(`❌ أنا شغال حاليًا في <#${queue.channel.id}>. ادخل نفس الروم أو استخدم /stop أولًا.`)],
-                flags: MessageFlags.Ephemeral,
-            });
-        }
-
         const query = interaction.options.getString('query');
-        const isUrl = /^https?:\/\//i.test(query);
         try {
             await interaction.deferReply();
         } catch (error) {
@@ -72,43 +62,14 @@ module.exports = {
         }
 
         try {
-            const player = getPlayer();
-            if (!player) throw new Error('Music player not initialized');
-            const playOptions = {
-                requestedBy: interaction.user,
-                queryType: isUrl ? QueryType.AUTO : QueryType.YOUTUBE_SEARCH,
-                fallbackSearchEngine: QueryType.YOUTUBE_SEARCH,
-                nodeOptions: {
-                    metadata: { channel: interaction.channel, requestedBy: interaction.user },
-                    leaveOnEmpty: true,
-                    leaveOnEmptyCooldown: 300000,
-                    leaveOnEnd: true,
-                    leaveOnEndCooldown: 120000,
-                    volume: 80,
-                },
-            };
-
-            let result;
-            try {
-                result = await player.play(channel, query, playOptions);
-            } catch (firstError) {
-                const extractFailed = /extract stream/i.test(firstError?.message || '');
-                if (!extractFailed) throw firstError;
-
-                // Retry with strict YouTube search and first direct result URL.
-                const search = await player.search(query, {
-                    requestedBy: interaction.user,
-                    searchEngine: QueryType.YOUTUBE_SEARCH,
-                    fallbackSearchEngine: QueryType.YOUTUBE_SEARCH,
-                });
-                const retryTrack = search.tracks?.[0];
-                if (!retryTrack) throw firstError;
-                result = await player.play(channel, retryTrack.url, {
-                    ...playOptions,
-                    queryType: QueryType.YOUTUBE_VIDEO,
-                    fallbackSearchEngine: QueryType.YOUTUBE_VIDEO,
-                });
-            }
+            const result = await llPlay(
+                interaction.client,
+                interaction.guildId,
+                channel.id,
+                interaction.channel,
+                query,
+                interaction.user
+            );
 
             await interaction.editReply({
                 embeds: [new EmbedBuilder().setColor('#5865f2').setDescription(`✅ تمت الإضافة: **${result.track?.title || query}**`)],

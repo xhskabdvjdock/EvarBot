@@ -18,7 +18,7 @@ module.exports = {
         if (!current) {
             return interaction.reply({ embeds: [err('ما في أغنية حالية!')], flags: MessageFlags.Ephemeral });
         }
-        const tracks = queue.tracks.toArray();
+        const tracks = queue.tracks || [];
         const page = (interaction.options.getInteger('page') || 1) - 1;
         const perPage = 10;
         const totalPages = Math.max(1, Math.ceil(tracks.length / perPage));
@@ -28,10 +28,10 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('#5865f2')
             .setTitle('📋 قائمة الأغاني')
-            .setDescription(`🎵 **يشتغل الحين:** [${current.title}](${current.url}) • \`${current.duration || 'مباشر'}\`\n\n` +
+            .setDescription(`🎵 **يشتغل الحين:** ${current.url ? `[${current.title}](${current.url})` : current.title} • \`${formatMs(current.durationMs)}\`\n\n` +
                 (pageTracks.length > 0
                     ? pageTracks.map((t, i) =>
-                        `**${start + i + 1}.** [${t.title}](${t.url}) • \`${t.duration || 'مباشر'}\``
+                        `**${start + i + 1}.** ${t.url ? `[${t.title}](${t.url})` : t.title} • \`${formatMs(t.durationMs)}\``
                     ).join('\n')
                     : '`القائمة فارغة`'))
             .setFooter({ text: `📄 صفحة ${page + 1}/${totalPages} • ${tracks.length} أغنية بالقائمة` })
@@ -40,5 +40,13 @@ module.exports = {
         await interaction.reply({ embeds: [embed] });
     },
 };
+
+function formatMs(ms) {
+    if (!ms || ms <= 0) return 'مباشر';
+    const s = Math.floor(ms / 1000);
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${String(r).padStart(2, '0')}`;
+}
 
 function err(msg) { return new EmbedBuilder().setColor('#ed4245').setDescription(`❌ ${msg}`); }

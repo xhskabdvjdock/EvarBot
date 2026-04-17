@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const { getQueue } = require('../../utils/musicPlayer');
+const { getQueue, llSeek } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,12 +21,12 @@ module.exports = {
             return interaction.reply({ embeds: [err('صيغة الوقت غلط! استخدم `1:30` أو `90`')], flags: MessageFlags.Ephemeral });
         }
 
-        const durationMs = Number(queue.currentTrack?.durationMS || 0);
+        const durationMs = Number(queue.currentTrack?.durationMs || 0);
         if (durationMs > 0 && (seconds * 1000) >= durationMs) {
             return interaction.reply({ embeds: [err('الوقت أكبر من مدة الأغنية الحالية!')], flags: MessageFlags.Ephemeral });
         }
 
-        await queue.node.seek(seconds * 1000);
+        await llSeek(interaction.guildId, seconds * 1000);
 
         await interaction.reply({
             embeds: [new EmbedBuilder().setColor('#5865f2').setDescription(`⏩ تم القفز لـ **${formatSec(seconds)}**`)],

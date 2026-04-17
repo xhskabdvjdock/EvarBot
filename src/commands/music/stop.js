@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const { getQueue } = require('../../utils/musicPlayer');
+const { getQueue, llStop } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
             return interaction.reply({ embeds: [err('ما في شي يشتغل!')], flags: MessageFlags.Ephemeral });
         }
 
-        queue.delete();
+        await llStop(interaction.guildId);
         await interaction.reply({
             embeds: [new EmbedBuilder().setColor('#ed4245').setDescription('⏹️ تم إيقاف الموسيقى ومسح القائمة!')],
         });

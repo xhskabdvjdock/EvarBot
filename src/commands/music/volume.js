@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const { getQueue } = require('../../utils/musicPlayer');
+const { getQueue, llSetVolume } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ module.exports = {
         }
 
         const vol = interaction.options.getInteger('level');
-        queue.node.setVolume(vol);
+        await llSetVolume(interaction.guildId, vol);
 
         const bars = Math.round(vol / 10);
         const bar = '█'.repeat(bars) + '░'.repeat(10 - bars);

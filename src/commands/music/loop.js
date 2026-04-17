@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const { getQueue, QueueRepeatMode } = require('../../utils/musicPlayer');
+const { getQueue, QueueRepeatMode, llSetRepeatMode } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -31,7 +31,7 @@ module.exports = {
             queue: '🔁 تكرار القائمة كلها',
         };
 
-        queue.setRepeatMode(modeMap[selected]);
+        llSetRepeatMode(interaction.guildId, modeMap[selected]);
 
         await interaction.reply({
             embeds: [new EmbedBuilder().setColor('#5865f2').setDescription(labels[selected])],

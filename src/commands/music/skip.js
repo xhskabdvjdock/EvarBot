@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const { getQueue } = require('../../utils/musicPlayer');
+const { getQueue, llSkip } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,17 +13,10 @@ module.exports = {
         }
 
         const current = queue.currentTrack;
-        if (queue.size > 0) {
-            const skipped = queue.node.skip();
-            if (!skipped) {
-                return interaction.reply({ embeds: [err('ما قدرت أتخطى الأغنية الحالية!')], flags: MessageFlags.Ephemeral });
-            }
-        } else {
-            queue.delete();
-        }
+        await llSkip(interaction.guildId);
 
         await interaction.reply({
-            embeds: [new EmbedBuilder().setColor('#43b581').setDescription(`⏭️ تم تخطي **${current?.name || 'الأغنية'}**`)],
+            embeds: [new EmbedBuilder().setColor('#43b581').setDescription(`⏭️ تم تخطي **${current?.title || 'الأغنية'}**`)],
         });
     },
 };

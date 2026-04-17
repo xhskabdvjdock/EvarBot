@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const { getQueue } = require('../../utils/musicPlayer');
+const { getQueue, llShuffle } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ module.exports = {
             return interaction.reply({ embeds: [err('لازم يكون أكثر من أغنيتين بالقائمة!')], flags: MessageFlags.Ephemeral });
         }
 
-        queue.enableShuffle(false);
+        llShuffle(interaction.guildId);
 
         await interaction.reply({
             embeds: [new EmbedBuilder().setColor('#43b581').setDescription(`🔀 تم خلط **${queue.size}** أغنية!`)],

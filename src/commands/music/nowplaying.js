@@ -20,23 +20,21 @@ module.exports = {
             [QueueRepeatMode.OFF]: '❌ مطفي',
             [QueueRepeatMode.TRACK]: '🔂 أغنية',
             [QueueRepeatMode.QUEUE]: '🔁 قائمة',
-            [QueueRepeatMode.AUTOPLAY]: '♾️ تلقائي',
         };
 
         const embed = new EmbedBuilder()
             .setColor('#5865f2')
             .setTitle('🎵 يشتغل الحين')
-            .setDescription(`**[${song.title}](${song.url})**`)
+            .setDescription(song.url ? `**[${song.title}](${song.url})**` : `**${song.title}**`)
             .addFields(
                 { name: '👤 الفنان', value: song.author || 'غير معروف', inline: true },
-                { name: '⏱️ المدة', value: song.duration || 'مباشر', inline: true },
-                { name: '🔊 الصوت', value: `${queue.node.volume}%`, inline: true },
+                { name: '⏱️ المدة', value: song.durationMs ? `\`${Math.floor(song.durationMs / 60000)}:${Math.floor((song.durationMs % 60000) / 1000).toString().padStart(2, '0')}\`` : 'مباشر', inline: true },
+                { name: '🔊 الصوت', value: `${queue.volume}%`, inline: true },
                 { name: '🔁 التكرار', value: loopModes[queue.repeatMode] || '❌', inline: true },
                 { name: '📋 بالقائمة', value: `${queue.size} أغنية`, inline: true },
-                { name: '⏸️ الحالة', value: queue.node.isPaused() ? '⏸️ متوقف' : '▶️ يشتغل', inline: true },
+                { name: '⏸️ الحالة', value: queue.paused ? '⏸️ متوقف' : '▶️ يشتغل', inline: true },
             )
-            .setThumbnail(song.thumbnail || null)
-            .setFooter({ text: `طلبه: ${song.requestedBy?.tag || 'غير معروف'}` })
+            .setFooter({ text: `طلبه: ${song.requestedBy?.tag || song.requestedBy || 'غير معروف'}` })
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
