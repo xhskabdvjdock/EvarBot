@@ -185,6 +185,7 @@ function getQueue(guildId) {
     const st = state.get(guildId);
     if (!st) return null;
     return {
+        channelId: st.player?.channelId || null,
         repeatMode: st.repeatMode,
         volume: st.volume,
         paused: st.paused,
