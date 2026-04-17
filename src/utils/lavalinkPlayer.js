@@ -8,6 +8,12 @@ let manager = null;
 let ready = false;
 let lastError = null;
 let lastReadyAt = null;
+let configSource = 'global';
+
+function toBool(value, fallback = false) {
+    if (value === undefined || value === null || value === '') return fallback;
+    return /^(1|true|yes|on)$/i.test(String(value).trim());
+}
 
 // لكل سيرفر: queue بسيطة
 const state = new Map(); // guildId -> { player, queue, current, repeatMode, volume, paused, textChannelId }
@@ -19,22 +25,50 @@ const RepeatMode = {
 };
 
 function getNodes() {
-    // أولوية 1: متغيرات البيئة (مناسبة لـ Render)
-    if (process.env.LAVALINK_HOST && process.env.LAVALINK_PASSWORD) {
+    // أولوية 1: متغيرات البيئة (Render)
+    const envHost = String(
+        process.env.LAVALINK_HOST ||
+        process.env.LAVALINK_NODE_HOST ||
+        process.env.LAVALINK_SERVER_HOST ||
+        ''
+    ).trim();
+    const envPassword = String(
+        process.env.LAVALINK_PASSWORD ||
+        process.env.LAVALINK_PASS ||
+        process.env.LAVALINK_SERVER_PASSWORD ||
+        ''
+    ).trim();
+    const envPort = Number(
+        process.env.LAVALINK_PORT ||
+        process.env.LAVALINK_NODE_PORT ||
+        process.env.LAVALINK_SERVER_PORT ||
+        2333
+    );
+    const envSecure = toBool(
+        process.env.LAVALINK_SECURE ?? process.env.LAVALINK_SSL,
+        envPort === 443
+    );
+
+    if (envHost && envPassword) {
+        configSource = 'env';
         return [
             {
                 id: process.env.LAVALINK_ID || 'env-node',
-                host: String(process.env.LAVALINK_HOST).trim(),
-                port: Number(process.env.LAVALINK_PORT || 2333),
-                password: String(process.env.LAVALINK_PASSWORD),
-                secure: String(process.env.LAVALINK_SECURE || 'false').toLowerCase() === 'true',
+                host: envHost,
+                port: envPort,
+                password: envPassword,
+                secure: envSecure,
             },
         ];
     }
 
     // أولوية 2: التخزين المحلي (الداشبورد)
+    if (envHost && !envPassword) {
+        console.warn('[Lavalink] LAVALINK_HOST موجود لكن كلمة المرور غير موجودة. سيتم استخدام إعدادات الداشبورد المحلية.');
+    }
     const g = getGlobalData();
     const nodes = g?.lavalink?.nodes || [];
+    configSource = 'global';
     return nodes.map((n, idx) => ({
         id: n.id || `node${idx + 1}`,
         host: n.host,
@@ -79,6 +113,8 @@ async function initLavalink(client) {
     if (manager) return manager;
     const nodes = getNodes();
     validateNodes(nodes);
+    const first = nodes[0];
+    console.log(`[Lavalink] Config source: ${configSource} | node: ${first.host}:${first.port} | secure=${first.secure}`);
     manager = new Manager(client, nodes);
 
     manager.on('ready', (node) => {
@@ -161,6 +197,7 @@ function getQueue(guildId) {
 function getLavalinkStatus() {
     const nodes = getNodes();
     return {
+        source: configSource,
         configured: nodes.length > 0,
         ready,
         managerReady: Boolean(manager),
