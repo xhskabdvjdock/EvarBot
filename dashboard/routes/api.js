@@ -44,6 +44,15 @@ router.get('/lavalink', requireAuth, (req, res) => {
     res.json(g.lavalink || { nodes: [] });
 });
 
+router.get('/lavalink/status', requireAuth, (req, res) => {
+    try {
+        const { getLavalinkStatus } = require('../../src/utils/lavalinkPlayer');
+        return res.json({ success: true, status: getLavalinkStatus() });
+    } catch (err) {
+        return res.status(500).json({ success: false, error: `تعذر جلب الحالة: ${err.message}` });
+    }
+});
+
 router.post('/lavalink', requireAuth, (req, res) => {
     try {
         const { nodes } = req.body || {};
