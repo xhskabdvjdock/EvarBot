@@ -46,6 +46,44 @@ async function loadStats() {
     document.getElementById('stat-uptime').textContent = stats.uptime;
 }
 
+// ══════════════════════ Lavalink Settings (Global) ══════════════════════
+async function loadLavalink() {
+    const cfg = await api('/api/lavalink');
+    if (!cfg) return;
+    const node = (cfg.nodes && cfg.nodes[0]) ? cfg.nodes[0] : {};
+    const host = document.getElementById('ll-host');
+    const port = document.getElementById('ll-port');
+    const password = document.getElementById('ll-password');
+    const secure = document.getElementById('ll-secure');
+    const id = document.getElementById('ll-id');
+    if (host) host.value = node.host || '';
+    if (port) port.value = node.port || 2333;
+    if (password) password.value = node.password || '';
+    if (secure) secure.value = String(Boolean(node.secure));
+    if (id) id.value = node.id || 'default';
+}
+
+async function saveLavalink() {
+    const host = (document.getElementById('ll-host')?.value || '').trim();
+    const port = Number(document.getElementById('ll-port')?.value || 2333);
+    const password = document.getElementById('ll-password')?.value || '';
+    const secure = (document.getElementById('ll-secure')?.value || 'false') === 'true';
+    const id = (document.getElementById('ll-id')?.value || 'default').trim();
+
+    const res = await api('/api/lavalink', {
+        method: 'POST',
+        body: JSON.stringify({
+            nodes: [{ id, host, port, password, secure }],
+        }),
+    });
+
+    if (res?.success) {
+        showToast('تم حفظ إعداد Lavalink وتطبيقه', 'success');
+    } else {
+        showToast(res?.error || 'فشل حفظ الإعداد', 'error');
+    }
+}
+
 // ══════════════════════ تحميل السيرفرات ══════════════════════
 async function loadGuilds() {
     const guilds = await api('/api/guilds');
