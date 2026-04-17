@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const { Rest } = require('lavacord');
-const { Manager } = require('lavacord/discord.js');
+// lavacord v2 ships wrappers under dist (e.g. dist/discord.js.js)
+const { Manager } = require('lavacord/dist/discord.js');
 const { getGlobalData } = require('./globalConfig');
 
 let manager = null;
