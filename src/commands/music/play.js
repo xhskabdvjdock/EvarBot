@@ -76,12 +76,18 @@ module.exports = {
             });
         } catch (err) {
             console.error('❌ Music play error:', err);
+            const msg = String(err?.message || '');
+            const isLavalink = msg.includes('Lavalink غير متاح');
             try {
                 await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setColor('#ed4245')
-                            .setDescription(`❌ فشل التشغيل: ${err.message?.slice(0, 200)}`),
+                            .setDescription(
+                                isLavalink
+                                    ? `❌ ${msg.slice(0, 300)}\n\n🔧 افتح الداشبورد > إعداد Lavalink (الموسيقى) > اختبر الاتصال ثم احفظ.`
+                                    : `❌ فشل التشغيل: ${msg.slice(0, 300)}`
+                            ),
                     ],
                 });
             } catch (editError) {
