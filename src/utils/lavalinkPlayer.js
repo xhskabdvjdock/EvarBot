@@ -28,9 +28,24 @@ function getNodes() {
     }));
 }
 
+function validateNodes(nodes) {
+    if (!Array.isArray(nodes) || nodes.length < 1) {
+        throw new Error('Lavalink nodes غير معرّفة. حدّثها من الداشبورد.');
+    }
+    const bad = nodes.find((n) => !n.host || !n.password || !Number.isFinite(Number(n.port)));
+    if (bad) {
+        throw new Error('بيانات Lavalink ناقصة (host/port/password).');
+    }
+    const placeholder = nodes.find((n) => /example\.com/i.test(String(n.host)));
+    if (placeholder) {
+        throw new Error('Lavalink host ما زال placeholder (example.com). غيّره من الداشبورد.');
+    }
+}
+
 async function initLavalink(client) {
     if (manager) return manager;
     const nodes = getNodes();
+    validateNodes(nodes);
     manager = new Manager(client, nodes);
 
     manager.on('ready', (node) => {
@@ -67,8 +82,14 @@ async function initLavalink(client) {
         await playNext(guildId);
     });
 
-    await manager.connect();
-    return manager;
+    try {
+        await manager.connect();
+        return manager;
+    } catch (err) {
+        manager = null;
+        ready = false;
+        throw err;
+    }
 }
 
 async function reinitLavalink(client) {
@@ -102,7 +123,13 @@ function getQueue(guildId) {
 }
 
 async function ensurePlayer(client, guildId, voiceChannelId, textChannelId) {
-    if (!manager) await initLavalink(client);
+    if (!manager) {
+        try {
+            await initLavalink(client);
+        } catch (err) {
+            throw new Error(`Lavalink غير متاح: ${err.message}`);
+        }
+    }
     if (!ready) {
         // لا نمنع التشغيل، لكن هذا يساعد لو كان node لم يعلن ready بعد
     }
