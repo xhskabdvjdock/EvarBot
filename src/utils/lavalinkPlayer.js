@@ -19,6 +19,20 @@ const RepeatMode = {
 };
 
 function getNodes() {
+    // أولوية 1: متغيرات البيئة (مناسبة لـ Render)
+    if (process.env.LAVALINK_HOST && process.env.LAVALINK_PASSWORD) {
+        return [
+            {
+                id: process.env.LAVALINK_ID || 'env-node',
+                host: String(process.env.LAVALINK_HOST).trim(),
+                port: Number(process.env.LAVALINK_PORT || 2333),
+                password: String(process.env.LAVALINK_PASSWORD),
+                secure: String(process.env.LAVALINK_SECURE || 'false').toLowerCase() === 'true',
+            },
+        ];
+    }
+
+    // أولوية 2: التخزين المحلي (الداشبورد)
     const g = getGlobalData();
     const nodes = g?.lavalink?.nodes || [];
     return nodes.map((n, idx) => ({
