@@ -84,6 +84,28 @@ async function saveLavalink() {
     }
 }
 
+async function testLavalink() {
+    const host = (document.getElementById('ll-host')?.value || '').trim();
+    const port = Number(document.getElementById('ll-port')?.value || 2333);
+    const password = document.getElementById('ll-password')?.value || '';
+    const secure = (document.getElementById('ll-secure')?.value || 'false') === 'true';
+    const id = (document.getElementById('ll-id')?.value || 'default').trim();
+
+    const res = await api('/api/lavalink/test', {
+        method: 'POST',
+        body: JSON.stringify({
+            node: { id, host, port, password, secure },
+        }),
+    });
+
+    if (!res) return;
+    if (res.success) {
+        showToast(`اتصال ناجح. إصدار Lavalink: ${res.version}`, 'success');
+    } else {
+        showToast(res.error || 'فشل اختبار Lavalink', 'error');
+    }
+}
+
 // ══════════════════════ تحميل السيرفرات ══════════════════════
 async function loadGuilds() {
     const guilds = await api('/api/guilds');
