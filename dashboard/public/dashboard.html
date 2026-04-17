@@ -68,6 +68,47 @@
                 <div class="spinner"></div>
             </div>
         </div>
+
+        <!-- Lavalink -->
+        <h2 class="section-title"><i class="fa-solid fa-music"></i> إعداد Lavalink (الموسيقى)</h2>
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <h3>بيانات الخادم</h3>
+                <p style="color: var(--text-secondary); margin-top: 6px;">غيّر بيانات Lavalink عندما يتوقف خادم مجاني. يتم حفظها وتطبيقها فورًا.</p>
+            </div>
+            <div class="card-body">
+                <div class="form-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+                    <div class="form-group">
+                        <label>Host</label>
+                        <input id="ll-host" type="text" placeholder="lavalink.example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Port</label>
+                        <input id="ll-port" type="number" placeholder="2333">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Password (API Key)</label>
+                        <input id="ll-password" type="password" placeholder="password">
+                    </div>
+                    <div class="form-group">
+                        <label>Secure (SSL)</label>
+                        <select id="ll-secure">
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Node Id</label>
+                        <input id="ll-id" type="text" placeholder="default">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top: 14px;">
+                    <button class="btn btn-primary" onclick="saveLavalink()">حفظ وتطبيق</button>
+                    <button class="btn" onclick="loadLavalink()">تحديث</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Toast Container -->
@@ -79,6 +120,7 @@
             loadUser();
             loadStats();
             loadGuilds();
+            loadLavalink();
         });
     </script>
 </body>
