@@ -61,6 +61,7 @@ async function loadLavalink() {
     if (password) password.value = node.password || '';
     if (secure) secure.value = String(Boolean(node.secure));
     if (id) id.value = node.id || 'default';
+    await loadLavalinkStatus();
 }
 
 async function saveLavalink() {
@@ -79,6 +80,7 @@ async function saveLavalink() {
 
     if (res?.success) {
         showToast('تم حفظ إعداد Lavalink وتطبيقه', 'success');
+        await loadLavalinkStatus();
     } else {
         showToast(res?.error || 'فشل حفظ الإعداد', 'error');
     }
@@ -103,6 +105,27 @@ async function testLavalink() {
         showToast(`اتصال ناجح. إصدار Lavalink: ${res.version}`, 'success');
     } else {
         showToast(res.error || 'فشل اختبار Lavalink', 'error');
+    }
+    await loadLavalinkStatus();
+}
+
+async function loadLavalinkStatus() {
+    const wrap = document.getElementById('ll-status');
+    if (!wrap) return;
+    const res = await api('/api/lavalink/status');
+    if (!res?.success) {
+        wrap.textContent = `حالة Lavalink: تعذر جلب الحالة (${res?.error || 'unknown'})`;
+        wrap.style.color = 'var(--warning)';
+        return;
+    }
+    const s = res.status || {};
+    if (s.ready) {
+        wrap.textContent = `حالة Lavalink: متصل. آخر جاهزية: ${s.lastReadyAt || 'غير معروف'}`;
+        wrap.style.color = 'var(--success)';
+    } else {
+        const node = (s.nodes && s.nodes[0]) ? `${s.nodes[0].host}:${s.nodes[0].port}` : 'غير مضبوط';
+        wrap.textContent = `حالة Lavalink: غير متصل (${node}). آخر خطأ: ${s.lastError || 'لا يوجد'}`;
+        wrap.style.color = 'var(--warning)';
     }
 }
 
