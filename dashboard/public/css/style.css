@@ -582,6 +582,59 @@ a {
     gap: 10px;
 }
 
+/* ══════════════════════ Generic Card + Forms ══════════════════════ */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+}
+
+.card-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.card-body {
+    margin-top: 14px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+    outline: none;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: rgba(88, 101, 242, 0.7);
+    box-shadow: 0 0 0 4px rgba(88, 101, 242, 0.15);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
 .setting-row {
     display: flex;
     align-items: center;
