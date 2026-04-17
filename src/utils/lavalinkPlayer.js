@@ -6,6 +6,8 @@ const { getGlobalData } = require('./globalConfig');
 
 let manager = null;
 let ready = false;
+let lastError = null;
+let lastReadyAt = null;
 
 // لكل سيرفر: queue بسيطة
 const state = new Map(); // guildId -> { player, queue, current, repeatMode, volume, paused, textChannelId }
@@ -67,6 +69,8 @@ async function initLavalink(client) {
 
     manager.on('ready', (node) => {
         ready = true;
+        lastError = null;
+        lastReadyAt = new Date().toISOString();
         console.log(`[Lavalink] Node ready: ${node.id}`);
     });
     manager.on('disconnect', (code, reason, node) => {
@@ -103,6 +107,7 @@ async function initLavalink(client) {
         await manager.connect();
         return manager;
     } catch (err) {
+        lastError = mapLavalinkError(err);
         manager = null;
         ready = false;
         throw err;
@@ -139,12 +144,31 @@ function getQueue(guildId) {
     };
 }
 
+function getLavalinkStatus() {
+    const nodes = getNodes();
+    return {
+        configured: nodes.length > 0,
+        ready,
+        managerReady: Boolean(manager),
+        lastError,
+        lastReadyAt,
+        nodes: nodes.map((n) => ({
+            id: n.id,
+            host: n.host,
+            port: n.port,
+            secure: n.secure,
+        })),
+    };
+}
+
 async function ensurePlayer(client, guildId, voiceChannelId, textChannelId) {
     if (!manager) {
         try {
             await initLavalink(client);
         } catch (err) {
-            throw new Error(`Lavalink غير متاح: ${mapLavalinkError(err)}`);
+            const mapped = mapLavalinkError(err);
+            lastError = mapped;
+            throw new Error(`Lavalink غير متاح: ${mapped}`);
         }
     }
     if (!ready) {
@@ -323,6 +347,7 @@ function shuffle(guildId) {
 module.exports = {
     initLavalink,
     reinitLavalink,
+    getLavalinkStatus,
     getQueue,
     RepeatMode,
     play,
