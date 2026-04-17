@@ -37,9 +37,15 @@ const { initPlayer } = require('./utils/musicPlayer');
 // تسجيل الدخول وتشغيل الداشبورد والـ AI والموسيقى
 client.login(process.env.TOKEN).then(async () => {
     initGemini();
-    await initPlayer(client);
     startDashboard(client);
+    try {
+        await initPlayer(client);
+    } catch (err) {
+        // لا توقف البوت/الداشبورد إذا Lavalink غير مضبوط
+        console.warn('⚠️ تعذر تهيئة Lavalink الآن. عدّل الإعدادات من الداشبورد ثم أعد المحاولة.');
+        console.warn(err?.message || err);
+    }
 }).catch(err => {
-    console.error('❌ فشل تسجيل الدخول! تأكد من التوكن في ملف .env');
+    console.error('❌ فشل تسجيل دخول Discord API. تحقق من TOKEN/الشبكة.');
     console.error(err);
 });
