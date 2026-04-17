@@ -42,6 +42,23 @@ function validateNodes(nodes) {
     }
 }
 
+function mapLavalinkError(err) {
+    const msg = String(err?.message || err || '');
+    if (/Unexpected server response:\s*400/i.test(msg)) {
+        return 'الخادم رفض اتصال WebSocket (400). تأكد من Secure/Port الصحيحين وأن العقدة Lavalink v4 فعلية.';
+    }
+    if (/didn'?t respond to \/version/i.test(msg)) {
+        return 'الخادم لا يعيد إصدار Lavalink صالح من /version. غالبًا العنوان ليس Lavalink أو Password/Proxy غير صحيح.';
+    }
+    if (/ENOTFOUND|getaddrinfo/i.test(msg)) {
+        return 'فشل DNS في الوصول إلى Host. تحقق من عنوان الخادم.';
+    }
+    if (/ECONNREFUSED|connect ECONNREFUSED/i.test(msg)) {
+        return 'تم رفض الاتصال بالخادم. تحقق من المنفذ أو حالة الخادم.';
+    }
+    return msg;
+}
+
 async function initLavalink(client) {
     if (manager) return manager;
     const nodes = getNodes();
@@ -127,7 +144,7 @@ async function ensurePlayer(client, guildId, voiceChannelId, textChannelId) {
         try {
             await initLavalink(client);
         } catch (err) {
-            throw new Error(`Lavalink غير متاح: ${err.message}`);
+            throw new Error(`Lavalink غير متاح: ${mapLavalinkError(err)}`);
         }
     }
     if (!ready) {
