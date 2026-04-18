@@ -194,7 +194,7 @@ router.post('/guilds/:id/settings/:type', requireAuth, requireGuildAccess, (req,
     const data = req.body;
 
     // أنواع الإعدادات المسموحة
-    const allowedTypes = ['welcome', 'goodbye', 'autorole', 'logging', 'leveling', 'tickets', 'ai'];
+    const allowedTypes = ['welcome', 'goodbye', 'autorole', 'logging', 'leveling', 'tickets', 'ai', 'gifTool'];
     if (!allowedTypes.includes(type)) {
         return res.status(400).json({ error: 'نوع إعداد غير صالح' });
     }
