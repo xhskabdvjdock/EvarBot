@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EvarBot - إدارة السيرفر</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -18,7 +19,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="/dashboard" class="navbar-brand">
-            <div class="icon">🤖</div>
+            <div class="icon"><i class="fa-solid fa-robot"></i></div>
             <span>EvarBot</span>
         </a>
         <div class="navbar-user">
@@ -41,22 +42,23 @@
 
         <!-- Tabs -->
         <div class="tabs" id="tabs">
-            <button class="tab active" data-tab="welcome" onclick="switchTab('welcome')">🎉 الترحيب</button>
-            <button class="tab" data-tab="goodbye" onclick="switchTab('goodbye')">😢 الوداع</button>
-            <button class="tab" data-tab="leveling" onclick="switchTab('leveling')">⭐ المستويات</button>
-            <button class="tab" data-tab="tickets" onclick="switchTab('tickets')">🎫 التذاكر</button>
-            <button class="tab" data-tab="ai" onclick="switchTab('ai')">🤖 الذكاء الاصطناعي</button>
-            <button class="tab" data-tab="logging" onclick="switchTab('logging')">📋 التسجيلات</button>
-            <button class="tab" data-tab="autorole" onclick="switchTab('autorole')">🎭 الأدوار</button>
-            <button class="tab" data-tab="embedbuilder" onclick="switchTab('embedbuilder')">📨 إمبد</button>
-            <button class="tab" data-tab="music" onclick="switchTab('music'); loadMusicStatus();">🎵 الموسيقى</button>
-            <button class="tab" data-tab="moderation" onclick="switchTab('moderation')">🛡️ الإدارة</button>
+            <button class="tab active" data-tab="welcome" onclick="switchTab('welcome')"><i class="fa-solid fa-champagne-glasses"></i> الترحيب</button>
+            <button class="tab" data-tab="goodbye" onclick="switchTab('goodbye')"><i class="fa-solid fa-door-open"></i> الوداع</button>
+            <button class="tab" data-tab="leveling" onclick="switchTab('leveling')"><i class="fa-solid fa-star" style="color: #fccc04;"></i> المستويات</button>
+            <button class="tab" data-tab="tickets" onclick="switchTab('tickets')"><i class="fa-solid fa-ticket" style="color: #eb459e;"></i> التذاكر</button>
+            <button class="tab" data-tab="ai" onclick="switchTab('ai')"><i class="fa-solid fa-robot"></i> الذكاء الاصطناعي</button>
+            <button class="tab" data-tab="logging" onclick="switchTab('logging')"><i class="fa-solid fa-clipboard-list"></i> التسجيلات</button>
+            <button class="tab" data-tab="autorole" onclick="switchTab('autorole')"><i class="fa-solid fa-masks-theater"></i> الأدوار</button>
+            <button class="tab" data-tab="embedbuilder" onclick="switchTab('embedbuilder')"><i class="fa-square-envelope"></i> إمبد</button>
+            <button class="tab" data-tab="music" onclick="switchTab('music'); loadMusicStatus();"><i class="fa-solid fa-music"></i> الموسيقى</button>
+            <button class="tab" data-tab="giftool" onclick="switchTab('giftool')"><i class="fa-solid fa-film"></i> GIF Tool</button>
+            <button class="tab" data-tab="moderation" onclick="switchTab('moderation')"><i class="fa-solid fa-shield-halved"></i> الإدارة</button>
         </div>
 
         <!-- Welcome Settings -->
         <div class="settings-panel active" id="panel-welcome">
             <div class="setting-group">
-                <h3>🎉 إعدادات الترحيب</h3>
+                <h3><i class="fa-solid fa-champagne-glasses"></i> إعدادات الترحيب</h3>
 
                 <div class="setting-row">
                     <div>
@@ -127,7 +129,7 @@
             </div>
 
             <div class="setting-group">
-                <h3>📝 الرسائل</h3>
+                <h3><i class="fa-solid fa-pen-to-square"></i> الرسائل</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">رسالة الترحيب</div>
@@ -145,7 +147,7 @@
             </div>
 
             <div class="setting-group">
-                <h3>🎨 تخصيص الإمبد</h3>
+                <h3><i class="fa-solid fa-palette"></i> تخصيص الإمبد</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">عنوان الإمبد (Title)</div>
@@ -155,7 +157,7 @@
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">نص الكاتب (Author)</div>
-                    <input type="text" class="input-text" id="welcome-author" placeholder="مثال: عضو جديد انضم! 🎉"
+                    <input type="text" class="input-text" id="welcome-author" placeholder="مثال: عضو جديد انضم! <i class="fa-solid fa-champagne-glasses"></i>"
                         oninput="markChanged()">
                 </div>
 
@@ -188,7 +190,7 @@
         <!-- Goodbye Settings -->
         <div class="settings-panel" id="panel-goodbye">
             <div class="setting-group">
-                <h3>😢 إعدادات الوداع</h3>
+                <h3><i class="fa-solid fa-door-open"></i> إعدادات الوداع</h3>
 
                 <div class="setting-row">
                     <div>
@@ -245,11 +247,11 @@
             </div>
 
             <div class="setting-group">
-                <h3>📝 الرسائل</h3>
+                <h3><i class="fa-solid fa-pen-to-square"></i> الرسائل</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">رسالة الوداع</div>
-                    <textarea class="input-text" id="goodbye-message" placeholder="للأسف {username} غادر السيرفر 😢"
+                    <textarea class="input-text" id="goodbye-message" placeholder="للأسف {username} غادر السيرفر <i class="fa-solid fa-door-open"></i>"
                         oninput="markChanged()"></textarea>
                     <div class="setting-desc">المتغيرات: {user} {username} {displayname} {server} {count} {tag} {id}
                     </div>
@@ -257,7 +259,7 @@
             </div>
 
             <div class="setting-group">
-                <h3>🎨 تخصيص الإمبد</h3>
+                <h3><i class="fa-solid fa-palette"></i> تخصيص الإمبد</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">عنوان الإمبد (Title)</div>
@@ -267,7 +269,7 @@
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">نص الكاتب (Author)</div>
-                    <input type="text" class="input-text" id="goodbye-author" placeholder="مثال: عضو غادر السيرفر 😢"
+                    <input type="text" class="input-text" id="goodbye-author" placeholder="مثال: عضو غادر السيرفر <i class="fa-solid fa-door-open"></i>"
                         oninput="markChanged()">
                 </div>
 
@@ -299,7 +301,7 @@
         <!-- Moderation Panel -->
         <div class="settings-panel" id="panel-moderation">
             <div class="setting-group">
-                <h3>🛡️ التحذيرات</h3>
+                <h3><i class="fa-solid fa-shield-halved"></i> التحذيرات</h3>
                 <div id="warnings-container">
                     <div class="loading">
                         <div class="spinner"></div>
@@ -311,7 +313,7 @@
         <!-- Leveling Panel -->
         <div class="settings-panel" id="panel-leveling">
             <div class="setting-group">
-                <h3>⭐ إعدادات المستويات</h3>
+                <h3><i class="fa-solid fa-star" style="color: #fccc04;"></i> إعدادات المستويات</h3>
 
                 <div class="setting-row">
                     <div>
@@ -348,7 +350,7 @@
             </div>
 
             <div class="setting-group">
-                <h3>📊 إعدادات XP</h3>
+                <h3><i class="fa-solid fa-chart-simple"></i> إعدادات XP</h3>
 
                 <div class="setting-row">
                     <div>
@@ -379,18 +381,18 @@
             </div>
 
             <div class="setting-group">
-                <h3>📝 رسالة اللفل أب</h3>
+                <h3><i class="fa-solid fa-pen-to-square"></i> رسالة اللفل أب</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">رسالة اللفل أب</div>
                     <textarea class="input-text" id="leveling-message"
-                        placeholder="🎉 مبروك {user}! وصلت المستوى {level}!" oninput="markChanged()"></textarea>
+                        placeholder="<i class="fa-solid fa-champagne-glasses"></i> مبروك {user}! وصلت المستوى {level}!" oninput="markChanged()"></textarea>
                     <div class="setting-desc">المتغيرات: {user} {username} {level} {server}</div>
                 </div>
             </div>
 
             <div class="setting-group">
-                <h3>🏆 ليدربورد</h3>
+                <h3><i class="fa-solid fa-trophy" style="color: #fbbf24;"></i> ليدربورد</h3>
                 <div id="leaderboard-container">
                     <div class="loading">
                         <div class="spinner"></div>
@@ -402,7 +404,7 @@
         <!-- Tickets Panel -->
         <div class="settings-panel" id="panel-tickets">
             <div class="setting-group">
-                <h3>🎫 إعدادات التذاكر</h3>
+                <h3><i class="fa-solid fa-ticket" style="color: #eb459e;"></i> إعدادات التذاكر</h3>
 
                 <div class="setting-row">
                     <div>
@@ -436,11 +438,11 @@
             </div>
 
             <div class="setting-group">
-                <h3>🎨 تخصيص البانل</h3>
+                <h3><i class="fa-solid fa-palette"></i> تخصيص البانل</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                     <div class="setting-label">عنوان البانل</div>
-                    <input type="text" class="input-text" id="tickets-panel-title" placeholder="🎫 نظام التذاكر"
+                    <input type="text" class="input-text" id="tickets-panel-title" placeholder="<i class="fa-solid fa-ticket" style="color: #eb459e;"></i> نظام التذاكر"
                         oninput="markChanged()">
                 </div>
 
@@ -474,7 +476,7 @@
             </div>
 
             <div class="setting-group">
-                <h3>📋 أنواع التذاكر</h3>
+                <h3><i class="fa-solid fa-clipboard-list"></i> أنواع التذاكر</h3>
                 <div class="setting-desc" style="margin-bottom: 12px;">أضف أنواع تذاكر مختلفة. كل نوع يظهر كزر أو خيار
                     في القائمة المنسدلة.</div>
                 <div id="ticket-categories-container"></div>
@@ -482,12 +484,12 @@
                     style="margin-top: 10px; width: 100%; padding: 12px; background: rgba(88,101,242,0.15); border: 2px dashed rgba(88,101,242,0.4); color: var(--accent); font-size: 15px; cursor: pointer; border-radius: var(--radius); transition: all 0.2s;"
                     onmouseover="this.style.background='rgba(88,101,242,0.25)'"
                     onmouseout="this.style.background='rgba(88,101,242,0.15)'">
-                    ➕ إضافة نوع تذكرة جديد
+                    <i class="fa-solid fa-plus"></i> إضافة نوع تذكرة جديد
                 </button>
             </div>
 
             <div class="setting-group">
-                <h3>📤 التذاكر المفتوحة</h3>
+                <h3><i class="fa-solid fa-arrow-up-right-from-square"></i> التذاكر المفتوحة</h3>
                 <div id="active-tickets-container">
                     <div class="loading">
                         <div class="spinner"></div>
@@ -499,7 +501,7 @@
         <!-- AI Panel -->
         <div class="settings-panel" id="panel-ai">
             <div class="setting-group">
-                <h3>🤖 إعدادات الذكاء الاصطناعي</h3>
+                <h3><i class="fa-solid fa-robot"></i> إعدادات الذكاء الاصطناعي</h3>
 
                 <div class="setting-row">
                     <div>
@@ -513,7 +515,7 @@
                 </div>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
-                    <div class="setting-label">📺 قناة الرد التلقائي</div>
+                    <div class="setting-label"><i class="fa-solid fa-tv"></i> قناة الرد التلقائي</div>
                     <div class="setting-desc">البوت بيرد تلقائياً على أي رسالة في هالقناة. اتركها فارغة للتعطيل.</div>
                     <select class="select-custom" id="ai-channel" onchange="markChanged()">
                         <option value="">— بدون قناة (معطّل) —</option>
@@ -522,22 +524,22 @@
             </div>
 
             <div class="setting-group">
-                <h3>🎭 شخصية الذكاء الاصطناعي</h3>
+                <h3><i class="fa-solid fa-masks-theater"></i> شخصية الذكاء الاصطناعي</h3>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
-                    <div class="setting-label">🤖 اسم الـ AI</div>
+                    <div class="setting-label"><i class="fa-solid fa-robot"></i> اسم الـ AI</div>
                     <input type="text" class="input-text" id="ai-name" placeholder="EvarBot AI" oninput="markChanged()">
                 </div>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
-                    <div class="setting-label">🎭 وصف الشخصية</div>
+                    <div class="setting-label"><i class="fa-solid fa-masks-theater"></i> وصف الشخصية</div>
                     <textarea class="input-text" id="ai-personality" placeholder="ودود ومساعد ومحترف"
                         oninput="markChanged()"></textarea>
                 </div>
 
                 <div class="setting-row">
                     <div>
-                        <div class="setting-label">🌐 لغة الرد</div>
+                        <div class="setting-label"><i class="fa-solid fa-globe"></i> لغة الرد</div>
                     </div>
                     <select class="select-custom" id="ai-language" onchange="markChanged()">
                         <option value="العربية">🇸🇦 العربية</option>
@@ -559,7 +561,7 @@
         <!-- Logging Panel -->
         <div class="settings-panel" id="panel-logging">
             <div class="setting-group">
-                <h3>📋 إعدادات التسجيلات</h3>
+                <h3><i class="fa-solid fa-clipboard-list"></i> إعدادات التسجيلات</h3>
 
                 <div class="setting-row">
                     <div>
@@ -573,7 +575,7 @@
                 </div>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
-                    <div class="setting-label">📺 قناة اللوق</div>
+                    <div class="setting-label"><i class="fa-solid fa-tv"></i> قناة اللوق</div>
                     <select class="select-custom" id="logging-channel" onchange="markChanged()">
                         <option value="">اختر قناة...</option>
                     </select>
@@ -581,46 +583,46 @@
             </div>
 
             <div class="setting-group">
-                <h3>📋 الأحداث</h3>
+                <h3><i class="fa-solid fa-clipboard-list"></i> الأحداث</h3>
                 <div class="setting-desc" style="margin-bottom: 12px;">اختر الأحداث اللي تبي تسجلها</div>
 
                 <div class="setting-row">
-                    <div class="setting-label">🗑️ حذف رسالة</div>
+                    <div class="setting-label"><i class="fa-solid fa-trash-can"></i> حذف رسالة</div>
                     <label class="toggle"><input type="checkbox" id="log-messageDelete" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">✏️ تعديل رسالة</div>
+                    <div class="setting-label"><i class="fa-solid fa-pencil"></i> تعديل رسالة</div>
                     <label class="toggle"><input type="checkbox" id="log-messageEdit" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">📥 دخول عضو</div>
+                    <div class="setting-label"><i class="fa-solid fa-arrow-right-to-bracket"></i> دخول عضو</div>
                     <label class="toggle"><input type="checkbox" id="log-memberJoin" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">📤 خروج عضو</div>
+                    <div class="setting-label"><i class="fa-solid fa-arrow-up-right-from-square"></i> خروج عضو</div>
                     <label class="toggle"><input type="checkbox" id="log-memberLeave" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">🎭 تغيير أدوار</div>
+                    <div class="setting-label"><i class="fa-solid fa-masks-theater"></i> تغيير أدوار</div>
                     <label class="toggle"><input type="checkbox" id="log-memberRoleUpdate"
                             onchange="markChanged()"><span class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">🔨 بان/أنبان</div>
+                    <div class="setting-label"><i class="fa-solid fa-gavel"></i> بان/أنبان</div>
                     <label class="toggle"><input type="checkbox" id="log-memberBan" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">📁 إنشاء قناة</div>
+                    <div class="setting-label"><i class="fa-solid fa-folder-plus"></i> إنشاء قناة</div>
                     <label class="toggle"><input type="checkbox" id="log-channelCreate" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">🗑️ حذف قناة</div>
+                    <div class="setting-label"><i class="fa-solid fa-trash-can"></i> حذف قناة</div>
                     <label class="toggle"><input type="checkbox" id="log-channelDelete" onchange="markChanged()"><span
                             class="toggle-slider"></span></label>
                 </div>
@@ -630,7 +632,7 @@
         <!-- Auto Roles Panel -->
         <div class="settings-panel" id="panel-autorole">
             <div class="setting-group">
-                <h3>🎭 أدوار تلقائية عند الدخول</h3>
+                <h3><i class="fa-solid fa-masks-theater"></i> أدوار تلقائية عند الدخول</h3>
                 <div class="setting-desc" style="margin-bottom: 12px;">الأدوار اللي بتنعطى لكل عضو جديد تلقائياً</div>
 
                 <div class="setting-row">
@@ -644,13 +646,13 @@
                 </div>
 
                 <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
-                    <div class="setting-label">➕ إضافة رول</div>
+                    <div class="setting-label"><i class="fa-solid fa-plus"></i> إضافة رول</div>
                     <div style="display: flex; gap: 8px;">
                         <select class="select-custom" id="autorole-select" style="flex: 1;">
                             <option value="">اختر رول...</option>
                         </select>
                         <button type="button" class="btn" onclick="addAutoRole()"
-                            style="padding: 8px 18px; white-space: nowrap;">➕ أضف</button>
+                            style="padding: 8px 18px; white-space: nowrap;"><i class="fa-solid fa-plus"></i> أضف</button>
                     </div>
                 </div>
 
@@ -664,22 +666,22 @@
                 <!-- النموذج -->
                 <div>
                     <div class="setting-group">
-                        <h3>📨 بناء الإمبد</h3>
+                        <h3><i class="fa-square-envelope"></i> بناء الإمبد</h3>
 
                         <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
-                            <div class="setting-label">📝 العنوان</div>
+                            <div class="setting-label"><i class="fa-solid fa-pen-to-square"></i> العنوان</div>
                             <input type="text" class="input-text" id="eb-title" placeholder="عنوان الإمبد"
                                 oninput="updateEmbedPreview()">
                         </div>
                         <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
-                            <div class="setting-label">📝 الوصف</div>
+                            <div class="setting-label"><i class="fa-solid fa-pen-to-square"></i> الوصف</div>
                             <textarea class="input-text" id="eb-desc" rows="4"
                                 placeholder="وصف الإمبد... (يدعم \n لسطر جديد)"
                                 oninput="updateEmbedPreview()"></textarea>
                         </div>
                         <div class="setting-row" style="gap: 10px;">
                             <div style="flex: 1;">
-                                <div class="setting-label">🎨 اللون</div>
+                                <div class="setting-label"><i class="fa-solid fa-palette"></i> اللون</div>
                                 <input type="color" id="eb-color" value="#5865f2" onchange="updateEmbedPreview()"
                                     style="width: 100%; height: 38px; border: none; border-radius: 8px; cursor: pointer;">
                             </div>
@@ -692,7 +694,7 @@
                     </div>
 
                     <div class="setting-group">
-                        <h3>📎 الصور</h3>
+                        <h3><i class="fa-solid fa-paperclip"></i> الصور</h3>
                         <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
                             <div class="setting-label">🖼️ صورة مصغرة (Thumbnail)</div>
                             <input type="text" class="input-text" id="eb-thumb" placeholder="رابط الصورة"
@@ -706,7 +708,7 @@
                     </div>
 
                     <div class="setting-group">
-                        <h3>ℹ️ الكاتب والفوتر</h3>
+                        <h3><i class="fa-solid fa-circle-info"></i> الكاتب والفوتر</h3>
                         <div class="setting-row" style="gap: 10px;">
                             <div style="flex: 1;">
                                 <div class="setting-label">اسم الكاتب</div>
@@ -739,20 +741,20 @@
                     </div>
 
                     <div class="setting-group">
-                        <h3>📝 الحقول (Fields)</h3>
+                        <h3><i class="fa-solid fa-pen-to-square"></i> الحقول (Fields)</h3>
                         <div id="eb-fields-list"></div>
                         <button type="button" class="btn" onclick="addEmbedField()"
-                            style="margin-top: 8px; padding: 8px 16px;">➕ إضافة حقل</button>
+                            style="margin-top: 8px; padding: 8px 16px;"><i class="fa-solid fa-plus"></i> إضافة حقل</button>
                     </div>
 
                     <div class="setting-group">
-                        <h3>📤 إرسال</h3>
+                        <h3><i class="fa-solid fa-arrow-up-right-from-square"></i> إرسال</h3>
                         <div class="setting-row" style="gap: 10px;">
                             <select class="select-custom" id="eb-channel" style="flex: 1;">
                                 <option value="">اختر قناة...</option>
                             </select>
                             <button type="button" class="btn" onclick="sendEmbed()"
-                                style="padding: 10px 24px; background: var(--accent); white-space: nowrap;">📨
+                                style="padding: 10px 24px; background: var(--accent); white-space: nowrap;"><i class="fa-square-envelope"></i>
                                 إرسال</button>
                         </div>
                     </div>
@@ -761,7 +763,7 @@
                 <!-- المعاينة -->
                 <div>
                     <div class="setting-group" style="position: sticky; top: 20px;">
-                        <h3>👁️ معاينة مباشرة</h3>
+                        <h3><i class="fa-solid fa-eye"></i> معاينة مباشرة</h3>
                         <div id="embed-preview"
                             style="background: #2f3136; border-radius: 8px; padding: 16px; border-left: 4px solid #5865f2;">
                             <div id="ep-author"
@@ -792,7 +794,7 @@
                         </div>
                         <div
                             style="margin-top: 12px; padding: 10px; background: rgba(88,101,242,0.1); border-radius: 8px; font-size: 12px; color: var(--text-secondary);">
-                            💡 الإمبد يتحدث تلقائياً أثناء الكتابة. اختر قناة واضغط إرسال!
+                            <i class="fa-solid fa-lightbulb" style="color: #fbbf24;"></i> الإمبد يتحدث تلقائياً أثناء الكتابة. اختر قناة واضغط إرسال!
                         </div>
                     </div>
                 </div>
@@ -803,7 +805,7 @@
     <!-- Music Panel -->
     <div class="settings-panel" id="panel-music">
         <div class="setting-group">
-            <h3>🎵 الموسيقى</h3>
+            <h3><i class="fa-solid fa-music"></i> الموسيقى</h3>
             <div id="music-status">
                 <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
                     <div style="font-size: 48px; margin-bottom: 12px;">🎶</div>
@@ -815,7 +817,7 @@
         </div>
 
         <div class="setting-group">
-            <h3>📝 الأوامر</h3>
+            <h3><i class="fa-solid fa-pen-to-square"></i> الأوامر</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;">
                 <div
                     style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
@@ -857,6 +859,120 @@
                     style="padding: 10px; background: var(--bg-glass); border-radius: 8px; border: 1px solid var(--border);">
                     <strong>/seek</strong><br><small style="color: var(--text-secondary);">قفز لوقت</small>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIF Tool Panel -->
+    <div class="settings-panel" id="panel-giftool">
+        <div class="setting-group">
+            <h3><i class="fa-solid fa-film"></i> تحويل الوسائط إلى GIF</h3>
+            <div class="setting-desc" style="margin-bottom: 12px;">
+                أداة احترافية لتحويل الصور والفيديوهات إلى GIF بسرعة داخل روم مخصص، مع تحكم كامل بالصلاحيات ونوع الوسائط والحدود.
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">تفعيل الميزة</div>
+                    <div class="setting-desc">عند التفعيل، البوت يحوّل الملفات داخل الروم المحدد تلقائيًا</div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="gif-enabled" onchange="markChanged()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">روم التحويل</div>
+                    <div class="setting-desc">أي صورة/فيديو يُرفع هنا سيتم تحويله</div>
+                </div>
+                <select class="select-custom" id="gif-channel" onchange="markChanged()">
+                    <option value="">اختر روم...</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">أنواع الملفات المسموح بها</div>
+                </div>
+                <select class="select-custom" id="gif-types" onchange="markChanged()">
+                    <option value="both">صور + فيديو</option>
+                    <option value="image">صور فقط</option>
+                    <option value="video">فيديو فقط</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <h3><i class="fa-solid fa-sliders"></i> حدود التحويل</h3>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">الحد الأقصى لحجم الملف (MB)</div>
+                </div>
+                <input type="number" class="input-text" id="gif-max-size" value="20" min="1" max="100"
+                    style="width: 90px; text-align: center;" onchange="markChanged()">
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">الحد الأقصى لمدة الفيديو (ثانية)</div>
+                </div>
+                <input type="number" class="input-text" id="gif-max-duration" value="12" min="1" max="60"
+                    style="width: 90px; text-align: center;" onchange="markChanged()">
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">عرض GIF الناتج (بكسل)</div>
+                </div>
+                <input type="number" class="input-text" id="gif-width" value="480" min="120" max="1280"
+                    style="width: 90px; text-align: center;" onchange="markChanged()">
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">معدل الإطارات (FPS)</div>
+                </div>
+                <input type="number" class="input-text" id="gif-fps" value="15" min="5" max="30"
+                    style="width: 90px; text-align: center;" onchange="markChanged()">
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">حذف الملف الأصلي بعد التحويل</div>
+                    <div class="setting-desc">يتطلب صلاحية Manage Messages للبوت</div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="gif-delete-source" checked onchange="markChanged()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <h3><i class="fa-solid fa-user-shield"></i> صلاحيات الاستخدام</h3>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">من يحق له الاستخدام</div>
+                </div>
+                <select class="select-custom" id="gif-access-mode" onchange="markChanged()">
+                    <option value="everyone">الجميع</option>
+                    <option value="roles">رولات محددة</option>
+                    <option value="users">مستخدمون محددون</option>
+                </select>
+            </div>
+
+            <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                <div class="setting-label">معرّفات الرولات (Role IDs)</div>
+                <input type="text" class="input-text" id="gif-roles"
+                    placeholder="افصل بين المعرّفات بفاصلة: 123,456" oninput="markChanged()">
+            </div>
+
+            <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                <div class="setting-label">معرّفات المستخدمين (User IDs)</div>
+                <input type="text" class="input-text" id="gif-users"
+                    placeholder="افصل بين المعرّفات بفاصلة: 111,222" oninput="markChanged()">
             </div>
         </div>
     </div>
