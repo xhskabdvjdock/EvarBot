@@ -34,10 +34,12 @@ const { startDashboard } = require('../dashboard/server');
 const { initGemini } = require('./utils/gemini');
 const { initPlayer } = require('./utils/musicPlayer');
 
-// تسجيل الدخول وتشغيل الداشبورد والـ AI والموسيقى
+// شغّل الداشبورد مباشرة حتى يفتح PORT دائمًا (مهم لـ Render)
+startDashboard(client);
+
+// تسجيل الدخول وتشغيل الـ AI والموسيقى
 client.login(process.env.TOKEN).then(async () => {
     initGemini();
-    startDashboard(client);
     try {
         await initPlayer(client);
     } catch (err) {
