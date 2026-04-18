@@ -111,6 +111,19 @@ function getGuildData(guildId) {
                 enabled: true,
                 roles: [],
             },
+            gifTool: {
+                enabled: false,
+                channelId: null,
+                allowedTypes: 'both', // image | video | both
+                maxFileSizeMb: 20,
+                maxVideoDurationSec: 12,
+                outputWidth: 480,
+                fps: 15,
+                accessMode: 'everyone', // everyone | roles | users
+                allowedRoleIds: [],
+                allowedUserIds: [],
+                deleteSourceAfterConvert: true,
+            },
             reactionRoles: [],
         };
         saveGuildData(guildId, defaultData);
