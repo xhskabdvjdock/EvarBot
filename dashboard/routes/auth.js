@@ -5,7 +5,9 @@ const router = express.Router();
 const DISCORD_API = 'https://discord.com/api/v10';
 const MAX_RETRIES = 5;
 const CALLBACK_COOLDOWN_MS = Number(process.env.OAUTH_CALLBACK_COOLDOWN_MS || 15000);
+const DISCORD_REQ_MIN_INTERVAL_MS = Number(process.env.OAUTH_MIN_INTERVAL_MS || 1200);
 const callbackCooldownByIp = new Map();
+let lastDiscordReqAt = 0;
 
 function getClientIp(req) {
     const fwd = req.headers['x-forwarded-for'];
@@ -34,6 +36,12 @@ async function discordRequest(fn, label) {
     let lastError;
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
         try {
+            const elapsed = Date.now() - lastDiscordReqAt;
+            const waitMs = DISCORD_REQ_MIN_INTERVAL_MS - elapsed;
+            if (waitMs > 0) {
+                await new Promise((resolve) => setTimeout(resolve, waitMs));
+            }
+            lastDiscordReqAt = Date.now();
             return await fn();
         } catch (err) {
             lastError = err;
