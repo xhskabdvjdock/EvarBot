@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/auth');
@@ -20,6 +21,11 @@ function startDashboard(client) {
 
     app.use(session({
         secret: process.env.SESSION_SECRET || 'evarbot-secret-key-change-me',
+        store: new FileStore({
+            path: path.join(__dirname, '..', 'data', 'sessions'),
+            retries: 1,
+            ttl: 60 * 60 * 24 * 7,
+        }),
         resave: false,
         saveUninitialized: false,
         cookie: {
