@@ -194,6 +194,7 @@ async function loadServerInfo(guildId) {
     populateChannelSelect('leveling-channel', guild.channels, 'نفس القناة');
     populateChannelSelect('ai-channel', guild.channels, '— بدون قناة (معطّل) —');
     populateChannelSelect('logging-channel', guild.channels, 'اختر قناة...');
+    populateChannelSelect('gif-channel', guild.channels, 'اختر روم...');
 
     // حفظ الرولات وملء قائمة الأدوار
     serverRoles = guild.roles || [];
@@ -312,6 +313,20 @@ async function loadServerSettings(guildId) {
     const ar = settings.autorole || {};
     setChecked('autorole-enabled', ar.enabled !== false);
     renderAutoRoles(ar.roles || []);
+
+    // GIF Tool
+    const gif = settings.gifTool || {};
+    setChecked('gif-enabled', gif.enabled);
+    setValue('gif-channel', gif.channelId || '');
+    setValue('gif-types', gif.allowedTypes || 'both');
+    setValue('gif-max-size', gif.maxFileSizeMb || 20);
+    setValue('gif-max-duration', gif.maxVideoDurationSec || 12);
+    setValue('gif-width', gif.outputWidth || 480);
+    setValue('gif-fps', gif.fps || 15);
+    setChecked('gif-delete-source', gif.deleteSourceAfterConvert !== false);
+    setValue('gif-access-mode', gif.accessMode || 'everyone');
+    setValue('gif-roles', (gif.allowedRoleIds || []).join(','));
+    setValue('gif-users', (gif.allowedUserIds || []).join(','));
 }
 
 // ══════════════════════ حفظ الإعدادات ══════════════════════
@@ -377,7 +392,7 @@ async function saveSettings() {
     };
 
     // إرسال
-    const [wRes, gRes, lRes] = await Promise.all([
+    const responses = await Promise.all([
         api(`/api/guilds/${gid}/settings/welcome`, {
             method: 'POST',
             body: JSON.stringify(welcomeData),
@@ -441,9 +456,25 @@ async function saveSettings() {
                 roles: collectAutoRoles(),
             }),
         }),
+        api(`/api/guilds/${gid}/settings/gifTool`, {
+            method: 'POST',
+            body: JSON.stringify({
+                enabled: getChecked('gif-enabled'),
+                channelId: getValue('gif-channel') || null,
+                allowedTypes: getValue('gif-types') || 'both',
+                maxFileSizeMb: parseInt(getValue('gif-max-size')) || 20,
+                maxVideoDurationSec: parseInt(getValue('gif-max-duration')) || 12,
+                outputWidth: parseInt(getValue('gif-width')) || 480,
+                fps: parseInt(getValue('gif-fps')) || 15,
+                accessMode: getValue('gif-access-mode') || 'everyone',
+                allowedRoleIds: splitCsvIds(getValue('gif-roles')),
+                allowedUserIds: splitCsvIds(getValue('gif-users')),
+                deleteSourceAfterConvert: getChecked('gif-delete-source'),
+            }),
+        }),
     ]);
 
-    if (wRes?.success && gRes?.success && lRes?.success) {
+    if (responses.every(r => r?.success)) {
         showToast('✅ تم حفظ الإعدادات بنجاح!', 'success');
         hasChanges = false;
         document.getElementById('save-bar').classList.remove('visible');
@@ -945,6 +976,13 @@ function setValue(id, val) {
 function getValue(id) {
     const el = document.getElementById(id);
     return el ? el.value : '';
+}
+
+function splitCsvIds(value) {
+    return String(value || '')
+        .split(',')
+        .map(v => v.trim())
+        .filter(v => /^\d{5,}$/.test(v));
 }
 
 function setText(id, val) {
