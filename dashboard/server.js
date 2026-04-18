@@ -5,11 +5,18 @@ const path = require('path');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 
+const fs = require('fs');
+
+const sessionsDir = path.join(__dirname, '..', 'data', 'sessions');
+if (!fs.existsSync(sessionsDir)) {
+    fs.mkdirSync(sessionsDir, { recursive: true });
+}
+
 let FileStore = null;
 try {
     FileStore = require('session-file-store')(session);
 } catch (err) {
-    console.warn('[Dashboard] session-file-store غير متوفر. سيتم استخدام MemoryStore مؤقتًا.');
+    console.warn('[Dashboard] session-file-store غير متوفر. سيتم استخدام MemoryStore مؤقتًا. الخطأ:', err.message);
 }
 
 function startDashboard(client) {
@@ -31,14 +38,14 @@ function startDashboard(client) {
         saveUninitialized: false,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 أيام
-            secure: isHosted,
+            secure: 'auto', // Auto handles proxied https correctly without dropping cookies on local
             sameSite: 'lax',
         },
     };
 
     if (FileStore) {
         sessionConfig.store = new FileStore({
-            path: path.join(__dirname, '..', 'data', 'sessions'),
+            path: sessionsDir,
             retries: 1,
             ttl: 60 * 60 * 24 * 7,
         });
