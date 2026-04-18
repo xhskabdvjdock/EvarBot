@@ -257,16 +257,24 @@ async function resolveTracks(player, query) {
     const isUrl = /^https?:\/\//i.test(query);
     const identifier = isUrl ? query : `ytsearch:${query}`;
     const res = await Rest.load(player.node, identifier);
+    
+    // Support Lavalink v4
     if (res.loadType === 'track') return [res.data];
     if (res.loadType === 'playlist') return res.data.tracks || [];
     if (res.loadType === 'search') return res.data || [];
+    
+    // Support Lavalink v3
+    if (res.loadType === 'TRACK_LOADED') return [res.data || res.tracks?.[0]].filter(Boolean);
+    if (res.loadType === 'PLAYLIST_LOADED') return res.tracks || res.data?.tracks || [];
+    if (res.loadType === 'SEARCH_RESULT') return res.tracks || res.data || [];
+    
     return [];
 }
 
 async function playEncoded(guildId, encoded, replace = false) {
     const st = state.get(guildId);
     if (!st?.player) return;
-    await st.player.play(encoded, { replace });
+    await st.player.play(encoded, { noReplace: !replace });
     st.paused = false;
 }
 
@@ -290,7 +298,7 @@ async function play(client, guildId, voiceChannelId, textChannel, query, request
 
     // نحول بيانات لواجهة موحدة للـ commands
     const normalized = tracks.map((t) => ({
-        encoded: t.encoded,
+        encoded: t.encoded || t.track, // t.track for v3 compat
         title: t.info?.title || 'Unknown',
         url: t.info?.uri || null,
         author: t.info?.author || null,
@@ -396,6 +404,14 @@ function shuffle(guildId) {
     return true;
 }
 
+function cleanState(guildId) {
+    const st = state.get(guildId);
+    if (!st) return;
+    st.queue = [];
+    st.current = null;
+    state.delete(guildId);
+}
+
 module.exports = {
     initLavalink,
     reinitLavalink,
@@ -410,5 +426,6 @@ module.exports = {
     seek,
     setRepeatMode,
     shuffle,
+    cleanState,
 };
 
