@@ -1,10 +1,16 @@
 const express = require('express');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
+
+let FileStore = null;
+try {
+    FileStore = require('session-file-store')(session);
+} catch (err) {
+    console.warn('[Dashboard] session-file-store غير متوفر. سيتم استخدام MemoryStore مؤقتًا.');
+}
 
 function startDashboard(client) {
     const app = express();
@@ -19,13 +25,8 @@ function startDashboard(client) {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    app.use(session({
+    const sessionConfig = {
         secret: process.env.SESSION_SECRET || 'evarbot-secret-key-change-me',
-        store: new FileStore({
-            path: path.join(__dirname, '..', 'data', 'sessions'),
-            retries: 1,
-            ttl: 60 * 60 * 24 * 7,
-        }),
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -33,7 +34,17 @@ function startDashboard(client) {
             secure: isHosted,
             sameSite: 'lax',
         },
-    }));
+    };
+
+    if (FileStore) {
+        sessionConfig.store = new FileStore({
+            path: path.join(__dirname, '..', 'data', 'sessions'),
+            retries: 1,
+            ttl: 60 * 60 * 24 * 7,
+        });
+    }
+
+    app.use(session(sessionConfig));
 
     // تمرير الكلاينت لكل الطلبات
     app.use((req, res, next) => {
