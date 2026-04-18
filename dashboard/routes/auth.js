@@ -4,6 +4,25 @@ const router = express.Router();
 
 const DISCORD_API = 'https://discord.com/api/v10';
 const MAX_RETRIES = 5;
+const CALLBACK_COOLDOWN_MS = Number(process.env.OAUTH_CALLBACK_COOLDOWN_MS || 15000);
+const callbackCooldownByIp = new Map();
+
+function getClientIp(req) {
+    const fwd = req.headers['x-forwarded-for'];
+    if (typeof fwd === 'string' && fwd.trim()) {
+        return fwd.split(',')[0].trim();
+    }
+    return req.ip || 'unknown';
+}
+
+function isInCooldown(req) {
+    const ip = getClientIp(req);
+    const now = Date.now();
+    const until = callbackCooldownByIp.get(ip) || 0;
+    if (until > now) return true;
+    callbackCooldownByIp.set(ip, now + CALLBACK_COOLDOWN_MS);
+    return false;
+}
 
 function getRetryDelayMs(attempt, retryAfterSeconds) {
     const serverDelay = Number(retryAfterSeconds || 0) * 1000;
@@ -45,6 +64,9 @@ router.get('/login', (req, res) => {
 router.get('/callback', async (req, res) => {
     const { code } = req.query;
     if (!code) return res.redirect('/');
+    if (isInCooldown(req)) {
+        return res.redirect('/?error=rate_limited');
+    }
 
     try {
         // الحصول على التوكن
