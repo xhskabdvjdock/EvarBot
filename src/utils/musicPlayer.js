@@ -11,6 +11,7 @@ const {
     seek: llSeek,
     setRepeatMode: llSetRepeatMode,
     shuffle: llShuffle,
+    cleanState: llCleanState,
 } = require('./lavalinkPlayer');
 
 async function initPlayer(client) {
@@ -34,4 +35,5 @@ module.exports = {
     llSeek,
     llSetRepeatMode,
     llShuffle,
+    cleanState: llCleanState,
 };
