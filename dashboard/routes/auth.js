@@ -47,6 +47,9 @@ async function discordRequest(fn, label) {
             lastError = err;
             const data = err?.response?.data || {};
             const status = err?.response?.status;
+            
+            console.error(`❌ OAuth2 Error (${label}):`, JSON.stringify({ status, data, msg: err.message }, null, 2));
+
             const retryable = status === 429 || data?.retryable === true;
             if (!retryable || attempt === MAX_RETRIES) break;
 
